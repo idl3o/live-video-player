@@ -2,22 +2,1091 @@
 > frontend@0.1.0 start
 > react-scripts start
 
-(node:32880) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:23156) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:32880) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:23156) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
-Compiled successfully!
+Failed to compile.
 
-You can now view frontend in the browser.
+Module not found: Error: Can't resolve 'socket.io-client' in 'C:\Users\Sam\Documents\GitHub\live-video-player\frontend\src\components'
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-  Local:            http://localhost:3000
-  On Your Network:  http://192.168.1.103:3000
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-Note that the development build is not optimized.
-To create a production build, use npm run build.
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-webpack compiled [1m[32msuccessfully[39m[22m
-Files successfully emitted, waiting for typecheck results...
-Issues checking in progress...
-No issues found.
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/LiveStreamChat.tsx[39m[22m [1m[32m6:0-38[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'socket.io-client' in 'C:\Users\Sam\Documents\GitHub\live-video-player\frontend\src\components'[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/LiveStreamChat.tsx[39m[22m [1m[32m46:29-43[39m[22m
+[1mexport 'default' (imported as 'config') was [1m[31mnot found[39m[22m[1m in '../config' (possible exports: [1m[32mAPI_SERVER_URL, DEFAULT_DEBUG_MODE, FLV_SERVER_URL, HLS_CONFIG, RTMP_SERVER_URL, STREAMING_CONFIG[39m[22m[1m)[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/VideoPlayer.tsx[39m[22m [1m[32m18:0-62[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'videojs-http-source-selector' in 'C:\Users\Sam\Documents\GitHub\live-video-player\frontend\src\components'[39m[22m
+
+webpack compiled with [1m[31m3 errors[39m[22m and [1m[33m1 warning[39m[22m
+ERROR in src/components/LiveStreamChat.tsx:2:28
+TS2307: Cannot find module 'socket.io-client' or its corresponding type declarations.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m[0m
+
+ERROR in src/components/LiveStreamChat.tsx:3:8
+TS1192: Module '"C:/Users/Sam/Documents/GitHub/live-video-player/frontend/src/config"' has no default export.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m   |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m
+   [90m 6 |[39m [90m// Types for chat messages and users[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:157:47
+TS7006: Parameter 'info' implicitly has an 'any' type.
+  [0m [90m 155 |[39m
+   [90m 156 |[39m   [90m// Function to handle stream info updates[39m
+  [31m[1m>[22m[39m[90m 157 |[39m   [36mconst[39m handleStreamInfoUpdate [33m=[39m useCallback((info) [33m=>[39m {
+   [90m     |[39m                                               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 158 |[39m     [36mif[39m (info) {
+   [90m 159 |[39m       setIsLive(info[33m.[39misActive)[33m;[39m
+   [90m 160 |[39m       setStreamInfo({[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2448: Block-scoped variable 'initializePlayer' used before its declaration.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2454: Variable 'initializePlayer' is used before being assigned.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:512:37
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 510 |[39m           [36mthis[39m[33m.[39mon([32m'seeking'[39m[33m,[39m () [33m=>[39m {
+   [90m 511 |[39m             [36mconst[39m currentTime [33m=[39m [36mthis[39m[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 512 |[39m             [36mconst[39m latestTime [33m=[39m [36mthis[39m[33m.[39mliveTracker[33m?[39m[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 513 |[39m             
+   [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:516:44
+TS18048: 'currentTime' is possibly 'undefined'.
+  [0m [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {
+  [31m[1m>[22m[39m[90m 516 |[39m               [36mconst[39m latency [33m=[39m latestTime [33m-[39m currentTime[33m;[39m
+   [90m     |[39m                                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 517 |[39m               setStats(prevStats [33m=>[39m ({
+   [90m 518 |[39m                 [33m...[39mprevStats[33m,[39m
+   [90m 519 |[39m                 latency[33m:[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m latency)[0m
+
+ERROR in src/components/VideoPlayer.tsx:526:37
+TS2551: Property 'controlBar' does not exist on type 'Player'. Did you mean 'controls'?
+  [0m [90m 524 |[39m           [90m// Add live edge seeking button for live streams[39m
+   [90m 525 |[39m           [36mif[39m (enableLowLatency) {
+  [31m[1m>[22m[39m[90m 526 |[39m             [36mconst[39m seekToLive [33m=[39m [36mthis[39m[33m.[39mcontrolBar[33m.[39maddChild([32m'button'[39m[33m,[39m {
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 527 |[39m               className[33m:[39m [32m'vjs-seek-to-live-button vjs-button'[39m[33m,[39m
+   [90m 528 |[39m               title[33m:[39m [32m'Go to Live Edge'[39m
+   [90m 529 |[39m             })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:534:26
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 532 |[39m               seekToLive[33m.[39mel_[33m.[39minnerHTML [33m=[39m [32m'<span>LIVE</span>'[39m[33m;[39m
+   [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+   [90m     |[39m                          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:535:24
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+   [90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+  [31m[1m>[22m[39m[90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m     |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m
+   [90m 538 |[39m             }[0m
+
+ERROR in src/components/VideoPlayer.tsx:570:34
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 568 |[39m             
+   [90m 569 |[39m             [90m// Calculate latency for live streams[39m
+  [31m[1m>[22m[39m[90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m     |[39m                                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+   [90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:572:39
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {
+   [90m 574 |[39m                 latency [33m=[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m liveEdge [33m-[39m currentTime)[33m;[39m
+   [90m 575 |[39m               }[0m
+
+ERROR in src/components/VideoPlayer.tsx:933:11
+TS2322: Type '{ isLive: true; viewerCount: number; duration: number; streamTitle: string; streamQuality: string; }' is not assignable to type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  Property 'duration' does not exist on type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  [0m [90m 931 |[39m           isLive[33m=[39m{isLive}
+   [90m 932 |[39m           viewerCount[33m=[39m{stats[33m.[39mviewerCount}
+  [31m[1m>[22m[39m[90m 933 |[39m           duration[33m=[39m{streamInfo[33m.[39mduration}
+   [90m     |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 934 |[39m           streamTitle[33m=[39m{streamTitle}
+   [90m 935 |[39m           streamQuality[33m=[39m{streamInfo[33m.[39mquality}
+   [90m 936 |[39m         [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:1142:14
+TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  [0m [90m 1140 |[39m       
+   [90m 1141 |[39m       {[90m/* Add CSS for live video player styling */[39m}
+  [31m[1m>[22m[39m[90m 1142 |[39m       [33m<[39m[33mstyle[39m jsx[33m>[39m{[32m`[39m
+   [90m      |[39m              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 1143 |[39m [32m        .video-status {[39m
+   [90m 1144 |[39m [32m          position: absolute;[39m
+   [90m 1145 |[39m [32m          top: 0;[39m[0m
+
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'socket.io-client' in 'C:\Users\Sam\Documents\GitHub\live-video-player\frontend\src\components'
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/LiveStreamChat.tsx[39m[22m [1m[32m6:0-38[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'socket.io-client' in 'C:\Users\Sam\Documents\GitHub\live-video-player\frontend\src\components'[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/LiveStreamChat.tsx[39m[22m [1m[32m46:29-43[39m[22m
+[1mexport 'default' (imported as 'config') was [1m[31mnot found[39m[22m[1m in '../config' (possible exports: [1m[32mAPI_SERVER_URL, DEFAULT_DEBUG_MODE, FLV_SERVER_URL, HLS_CONFIG, RTMP_SERVER_URL, STREAMING_CONFIG[39m[22m[1m)[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/VideoPlayer.tsx[39m[22m [1m[32m18:0-62[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'videojs-http-source-selector' in 'C:\Users\Sam\Documents\GitHub\live-video-player\frontend\src\components'[39m[22m
+
+webpack compiled with [1m[31m3 errors[39m[22m and [1m[33m1 warning[39m[22m
+Compiling...
+ERROR in src/components/LiveStreamChat.tsx:2:28
+TS2307: Cannot find module 'socket.io-client' or its corresponding type declarations.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m[0m
+
+ERROR in src/components/LiveStreamChat.tsx:3:8
+TS1192: Module '"C:/Users/Sam/Documents/GitHub/live-video-player/frontend/src/config"' has no default export.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m   |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m
+   [90m 6 |[39m [90m// Types for chat messages and users[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:157:47
+TS7006: Parameter 'info' implicitly has an 'any' type.
+  [0m [90m 155 |[39m
+   [90m 156 |[39m   [90m// Function to handle stream info updates[39m
+  [31m[1m>[22m[39m[90m 157 |[39m   [36mconst[39m handleStreamInfoUpdate [33m=[39m useCallback((info) [33m=>[39m {
+   [90m     |[39m                                               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 158 |[39m     [36mif[39m (info) {
+   [90m 159 |[39m       setIsLive(info[33m.[39misActive)[33m;[39m
+   [90m 160 |[39m       setStreamInfo({[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2448: Block-scoped variable 'initializePlayer' used before its declaration.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2454: Variable 'initializePlayer' is used before being assigned.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:512:37
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 510 |[39m           [36mthis[39m[33m.[39mon([32m'seeking'[39m[33m,[39m () [33m=>[39m {
+   [90m 511 |[39m             [36mconst[39m currentTime [33m=[39m [36mthis[39m[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 512 |[39m             [36mconst[39m latestTime [33m=[39m [36mthis[39m[33m.[39mliveTracker[33m?[39m[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 513 |[39m             
+   [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:516:44
+TS18048: 'currentTime' is possibly 'undefined'.
+  [0m [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {
+  [31m[1m>[22m[39m[90m 516 |[39m               [36mconst[39m latency [33m=[39m latestTime [33m-[39m currentTime[33m;[39m
+   [90m     |[39m                                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 517 |[39m               setStats(prevStats [33m=>[39m ({
+   [90m 518 |[39m                 [33m...[39mprevStats[33m,[39m
+   [90m 519 |[39m                 latency[33m:[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m latency)[0m
+
+ERROR in src/components/VideoPlayer.tsx:526:37
+TS2551: Property 'controlBar' does not exist on type 'Player'. Did you mean 'controls'?
+  [0m [90m 524 |[39m           [90m// Add live edge seeking button for live streams[39m
+   [90m 525 |[39m           [36mif[39m (enableLowLatency) {
+  [31m[1m>[22m[39m[90m 526 |[39m             [36mconst[39m seekToLive [33m=[39m [36mthis[39m[33m.[39mcontrolBar[33m.[39maddChild([32m'button'[39m[33m,[39m {
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 527 |[39m               className[33m:[39m [32m'vjs-seek-to-live-button vjs-button'[39m[33m,[39m
+   [90m 528 |[39m               title[33m:[39m [32m'Go to Live Edge'[39m
+   [90m 529 |[39m             })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:534:26
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 532 |[39m               seekToLive[33m.[39mel_[33m.[39minnerHTML [33m=[39m [32m'<span>LIVE</span>'[39m[33m;[39m
+   [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+   [90m     |[39m                          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:535:24
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+   [90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+  [31m[1m>[22m[39m[90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m     |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m
+   [90m 538 |[39m             }[0m
+
+ERROR in src/components/VideoPlayer.tsx:570:34
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 568 |[39m             
+   [90m 569 |[39m             [90m// Calculate latency for live streams[39m
+  [31m[1m>[22m[39m[90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m     |[39m                                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+   [90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:572:39
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {
+   [90m 574 |[39m                 latency [33m=[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m liveEdge [33m-[39m currentTime)[33m;[39m
+   [90m 575 |[39m               }[0m
+
+ERROR in src/components/VideoPlayer.tsx:933:11
+TS2322: Type '{ isLive: true; viewerCount: number; duration: number; streamTitle: string; streamQuality: string; }' is not assignable to type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  Property 'duration' does not exist on type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  [0m [90m 931 |[39m           isLive[33m=[39m{isLive}
+   [90m 932 |[39m           viewerCount[33m=[39m{stats[33m.[39mviewerCount}
+  [31m[1m>[22m[39m[90m 933 |[39m           duration[33m=[39m{streamInfo[33m.[39mduration}
+   [90m     |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 934 |[39m           streamTitle[33m=[39m{streamTitle}
+   [90m 935 |[39m           streamQuality[33m=[39m{streamInfo[33m.[39mquality}
+   [90m 936 |[39m         [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:1142:14
+TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  [0m [90m 1140 |[39m       
+   [90m 1141 |[39m       {[90m/* Add CSS for live video player styling */[39m}
+  [31m[1m>[22m[39m[90m 1142 |[39m       [33m<[39m[33mstyle[39m jsx[33m>[39m{[32m`[39m
+   [90m      |[39m              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 1143 |[39m [32m        .video-status {[39m
+   [90m 1144 |[39m [32m          position: absolute;[39m
+   [90m 1145 |[39m [32m          top: 0;[39m[0m
+
+Failed to compile.
+
+Attempted import error: '../config' does not contain a default export (imported as 'config').
+[1mLOG from webpack.FileSystemInfo[39m[22m
+<w> [1m[33mManaged item C:\Users\Sam\Documents\GitHub\live-video-player\frontend\node_modules\videojs-http-source-selector\node_modules\video.js isn't a directory or doesn't contain a package.json (see snapshot.managedPaths option)[39m[22m
++ 14 hidden lines
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/LiveStreamChat.tsx[39m[22m [1m[32m46:29-43[39m[22m
+[1mexport 'default' (imported as 'config') was [1m[31mnot found[39m[22m[1m in '../config' (possible exports: [1m[32mAPI_SERVER_URL, DEFAULT_DEBUG_MODE, FLV_SERVER_URL, HLS_CONFIG, RTMP_SERVER_URL, STREAMING_CONFIG[39m[22m[1m)[39m[22m
+
+webpack compiled with [1m[31m1 error[39m[22m and [1m[33m1 warning[39m[22m
+ERROR in src/components/LiveStreamChat.tsx:2:28
+TS2307: Cannot find module 'socket.io-client' or its corresponding type declarations.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m[0m
+
+ERROR in src/components/LiveStreamChat.tsx:3:8
+TS1192: Module '"C:/Users/Sam/Documents/GitHub/live-video-player/frontend/src/config"' has no default export.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m   |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m
+   [90m 6 |[39m [90m// Types for chat messages and users[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:157:47
+TS7006: Parameter 'info' implicitly has an 'any' type.
+  [0m [90m 155 |[39m
+   [90m 156 |[39m   [90m// Function to handle stream info updates[39m
+  [31m[1m>[22m[39m[90m 157 |[39m   [36mconst[39m handleStreamInfoUpdate [33m=[39m useCallback((info) [33m=>[39m {
+   [90m     |[39m                                               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 158 |[39m     [36mif[39m (info) {
+   [90m 159 |[39m       setIsLive(info[33m.[39misActive)[33m;[39m
+   [90m 160 |[39m       setStreamInfo({[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2448: Block-scoped variable 'initializePlayer' used before its declaration.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2454: Variable 'initializePlayer' is used before being assigned.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:512:37
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 510 |[39m           [36mthis[39m[33m.[39mon([32m'seeking'[39m[33m,[39m () [33m=>[39m {
+   [90m 511 |[39m             [36mconst[39m currentTime [33m=[39m [36mthis[39m[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 512 |[39m             [36mconst[39m latestTime [33m=[39m [36mthis[39m[33m.[39mliveTracker[33m?[39m[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 513 |[39m             
+   [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:516:44
+TS18048: 'currentTime' is possibly 'undefined'.
+  [0m [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {
+  [31m[1m>[22m[39m[90m 516 |[39m               [36mconst[39m latency [33m=[39m latestTime [33m-[39m currentTime[33m;[39m
+   [90m     |[39m                                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 517 |[39m               setStats(prevStats [33m=>[39m ({
+   [90m 518 |[39m                 [33m...[39mprevStats[33m,[39m
+   [90m 519 |[39m                 latency[33m:[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m latency)[0m
+
+ERROR in src/components/VideoPlayer.tsx:526:37
+TS2551: Property 'controlBar' does not exist on type 'Player'. Did you mean 'controls'?
+  [0m [90m 524 |[39m           [90m// Add live edge seeking button for live streams[39m
+   [90m 525 |[39m           [36mif[39m (enableLowLatency) {
+  [31m[1m>[22m[39m[90m 526 |[39m             [36mconst[39m seekToLive [33m=[39m [36mthis[39m[33m.[39mcontrolBar[33m.[39maddChild([32m'button'[39m[33m,[39m {
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 527 |[39m               className[33m:[39m [32m'vjs-seek-to-live-button vjs-button'[39m[33m,[39m
+   [90m 528 |[39m               title[33m:[39m [32m'Go to Live Edge'[39m
+   [90m 529 |[39m             })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:534:26
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 532 |[39m               seekToLive[33m.[39mel_[33m.[39minnerHTML [33m=[39m [32m'<span>LIVE</span>'[39m[33m;[39m
+   [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+   [90m     |[39m                          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:535:24
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+   [90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+  [31m[1m>[22m[39m[90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m     |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m
+   [90m 538 |[39m             }[0m
+
+ERROR in src/components/VideoPlayer.tsx:570:34
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 568 |[39m             
+   [90m 569 |[39m             [90m// Calculate latency for live streams[39m
+  [31m[1m>[22m[39m[90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m     |[39m                                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+   [90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:572:39
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {
+   [90m 574 |[39m                 latency [33m=[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m liveEdge [33m-[39m currentTime)[33m;[39m
+   [90m 575 |[39m               }[0m
+
+ERROR in src/components/VideoPlayer.tsx:933:11
+TS2322: Type '{ isLive: true; viewerCount: number; duration: number; streamTitle: string; streamQuality: string; }' is not assignable to type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  Property 'duration' does not exist on type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  [0m [90m 931 |[39m           isLive[33m=[39m{isLive}
+   [90m 932 |[39m           viewerCount[33m=[39m{stats[33m.[39mviewerCount}
+  [31m[1m>[22m[39m[90m 933 |[39m           duration[33m=[39m{streamInfo[33m.[39mduration}
+   [90m     |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 934 |[39m           streamTitle[33m=[39m{streamTitle}
+   [90m 935 |[39m           streamQuality[33m=[39m{streamInfo[33m.[39mquality}
+   [90m 936 |[39m         [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:1142:14
+TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  [0m [90m 1140 |[39m       
+   [90m 1141 |[39m       {[90m/* Add CSS for live video player styling */[39m}
+  [31m[1m>[22m[39m[90m 1142 |[39m       [33m<[39m[33mstyle[39m jsx[33m>[39m{[32m`[39m
+   [90m      |[39m              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 1143 |[39m [32m        .video-status {[39m
+   [90m 1144 |[39m [32m          position: absolute;[39m
+   [90m 1145 |[39m [32m          top: 0;[39m[0m
+
+Compiling...
+Failed to compile.
+
+Attempted import error: '../config' does not contain a default export (imported as 'config').
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+[39m[22m
+
+[1m[31mERROR[39m[22m in [1m./src/components/LiveStreamChat.tsx[39m[22m [1m[32m46:29-43[39m[22m
+[1mexport 'default' (imported as 'config') was [1m[31mnot found[39m[22m[1m in '../config' (possible exports: [1m[32mAPI_SERVER_URL, DEFAULT_DEBUG_MODE, FLV_SERVER_URL, HLS_CONFIG, RTMP_SERVER_URL, STREAMING_CONFIG[39m[22m[1m)[39m[22m
+
+webpack compiled with [1m[31m1 error[39m[22m and [1m[33m1 warning[39m[22m
+ERROR in src/components/LiveStreamChat.tsx:2:28
+TS2307: Cannot find module 'socket.io-client' or its corresponding type declarations.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m[0m
+
+ERROR in src/components/LiveStreamChat.tsx:3:8
+TS1192: Module '"C:/Users/Sam/Documents/GitHub/live-video-player/frontend/src/config"' has no default export.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m config [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m   |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m
+   [90m 6 |[39m [90m// Types for chat messages and users[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:157:47
+TS7006: Parameter 'info' implicitly has an 'any' type.
+  [0m [90m 155 |[39m
+   [90m 156 |[39m   [90m// Function to handle stream info updates[39m
+  [31m[1m>[22m[39m[90m 157 |[39m   [36mconst[39m handleStreamInfoUpdate [33m=[39m useCallback((info) [33m=>[39m {
+   [90m     |[39m                                               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 158 |[39m     [36mif[39m (info) {
+   [90m 159 |[39m       setIsLive(info[33m.[39misActive)[33m;[39m
+   [90m 160 |[39m       setStreamInfo({[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2448: Block-scoped variable 'initializePlayer' used before its declaration.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2454: Variable 'initializePlayer' is used before being assigned.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:512:37
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 510 |[39m           [36mthis[39m[33m.[39mon([32m'seeking'[39m[33m,[39m () [33m=>[39m {
+   [90m 511 |[39m             [36mconst[39m currentTime [33m=[39m [36mthis[39m[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 512 |[39m             [36mconst[39m latestTime [33m=[39m [36mthis[39m[33m.[39mliveTracker[33m?[39m[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 513 |[39m             
+   [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:516:44
+TS18048: 'currentTime' is possibly 'undefined'.
+  [0m [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {
+  [31m[1m>[22m[39m[90m 516 |[39m               [36mconst[39m latency [33m=[39m latestTime [33m-[39m currentTime[33m;[39m
+   [90m     |[39m                                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 517 |[39m               setStats(prevStats [33m=>[39m ({
+   [90m 518 |[39m                 [33m...[39mprevStats[33m,[39m
+   [90m 519 |[39m                 latency[33m:[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m latency)[0m
+
+ERROR in src/components/VideoPlayer.tsx:526:37
+TS2551: Property 'controlBar' does not exist on type 'Player'. Did you mean 'controls'?
+  [0m [90m 524 |[39m           [90m// Add live edge seeking button for live streams[39m
+   [90m 525 |[39m           [36mif[39m (enableLowLatency) {
+  [31m[1m>[22m[39m[90m 526 |[39m             [36mconst[39m seekToLive [33m=[39m [36mthis[39m[33m.[39mcontrolBar[33m.[39maddChild([32m'button'[39m[33m,[39m {
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 527 |[39m               className[33m:[39m [32m'vjs-seek-to-live-button vjs-button'[39m[33m,[39m
+   [90m 528 |[39m               title[33m:[39m [32m'Go to Live Edge'[39m
+   [90m 529 |[39m             })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:534:26
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 532 |[39m               seekToLive[33m.[39mel_[33m.[39minnerHTML [33m=[39m [32m'<span>LIVE</span>'[39m[33m;[39m
+   [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+   [90m     |[39m                          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:535:24
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+   [90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+  [31m[1m>[22m[39m[90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m     |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m
+   [90m 538 |[39m             }[0m
+
+ERROR in src/components/VideoPlayer.tsx:570:34
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 568 |[39m             
+   [90m 569 |[39m             [90m// Calculate latency for live streams[39m
+  [31m[1m>[22m[39m[90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m     |[39m                                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+   [90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:572:39
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {
+   [90m 574 |[39m                 latency [33m=[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m liveEdge [33m-[39m currentTime)[33m;[39m
+   [90m 575 |[39m               }[0m
+
+ERROR in src/components/VideoPlayer.tsx:933:11
+TS2322: Type '{ isLive: true; viewerCount: number; duration: number; streamTitle: string; streamQuality: string; }' is not assignable to type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  Property 'duration' does not exist on type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  [0m [90m 931 |[39m           isLive[33m=[39m{isLive}
+   [90m 932 |[39m           viewerCount[33m=[39m{stats[33m.[39mviewerCount}
+  [31m[1m>[22m[39m[90m 933 |[39m           duration[33m=[39m{streamInfo[33m.[39mduration}
+   [90m     |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 934 |[39m           streamTitle[33m=[39m{streamTitle}
+   [90m 935 |[39m           streamQuality[33m=[39m{streamInfo[33m.[39mquality}
+   [90m 936 |[39m         [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:1142:14
+TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  [0m [90m 1140 |[39m       
+   [90m 1141 |[39m       {[90m/* Add CSS for live video player styling */[39m}
+  [31m[1m>[22m[39m[90m 1142 |[39m       [33m<[39m[33mstyle[39m jsx[33m>[39m{[32m`[39m
+   [90m      |[39m              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 1143 |[39m [32m        .video-status {[39m
+   [90m 1144 |[39m [32m          position: absolute;[39m
+   [90m 1145 |[39m [32m          top: 0;[39m[0m
+
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+ERROR in src/components/LiveStreamChat.tsx:2:28
+TS2307: Cannot find module 'socket.io-client' or its corresponding type declarations.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 3 |[39m [36mimport[39m { [33mAPI_SERVER_URL[39m } [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:157:47
+TS7006: Parameter 'info' implicitly has an 'any' type.
+  [0m [90m 155 |[39m
+   [90m 156 |[39m   [90m// Function to handle stream info updates[39m
+  [31m[1m>[22m[39m[90m 157 |[39m   [36mconst[39m handleStreamInfoUpdate [33m=[39m useCallback((info) [33m=>[39m {
+   [90m     |[39m                                               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 158 |[39m     [36mif[39m (info) {
+   [90m 159 |[39m       setIsLive(info[33m.[39misActive)[33m;[39m
+   [90m 160 |[39m       setStreamInfo({[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2448: Block-scoped variable 'initializePlayer' used before its declaration.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2454: Variable 'initializePlayer' is used before being assigned.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:512:37
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 510 |[39m           [36mthis[39m[33m.[39mon([32m'seeking'[39m[33m,[39m () [33m=>[39m {
+   [90m 511 |[39m             [36mconst[39m currentTime [33m=[39m [36mthis[39m[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 512 |[39m             [36mconst[39m latestTime [33m=[39m [36mthis[39m[33m.[39mliveTracker[33m?[39m[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 513 |[39m             
+   [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:516:44
+TS18048: 'currentTime' is possibly 'undefined'.
+  [0m [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {
+  [31m[1m>[22m[39m[90m 516 |[39m               [36mconst[39m latency [33m=[39m latestTime [33m-[39m currentTime[33m;[39m
+   [90m     |[39m                                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 517 |[39m               setStats(prevStats [33m=>[39m ({
+   [90m 518 |[39m                 [33m...[39mprevStats[33m,[39m
+   [90m 519 |[39m                 latency[33m:[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m latency)[0m
+
+ERROR in src/components/VideoPlayer.tsx:526:37
+TS2551: Property 'controlBar' does not exist on type 'Player'. Did you mean 'controls'?
+  [0m [90m 524 |[39m           [90m// Add live edge seeking button for live streams[39m
+   [90m 525 |[39m           [36mif[39m (enableLowLatency) {
+  [31m[1m>[22m[39m[90m 526 |[39m             [36mconst[39m seekToLive [33m=[39m [36mthis[39m[33m.[39mcontrolBar[33m.[39maddChild([32m'button'[39m[33m,[39m {
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 527 |[39m               className[33m:[39m [32m'vjs-seek-to-live-button vjs-button'[39m[33m,[39m
+   [90m 528 |[39m               title[33m:[39m [32m'Go to Live Edge'[39m
+   [90m 529 |[39m             })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:534:26
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 532 |[39m               seekToLive[33m.[39mel_[33m.[39minnerHTML [33m=[39m [32m'<span>LIVE</span>'[39m[33m;[39m
+   [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+   [90m     |[39m                          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:535:24
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+   [90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+  [31m[1m>[22m[39m[90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m     |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m
+   [90m 538 |[39m             }[0m
+
+ERROR in src/components/VideoPlayer.tsx:570:34
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 568 |[39m             
+   [90m 569 |[39m             [90m// Calculate latency for live streams[39m
+  [31m[1m>[22m[39m[90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m     |[39m                                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+   [90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:572:39
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {
+   [90m 574 |[39m                 latency [33m=[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m liveEdge [33m-[39m currentTime)[33m;[39m
+   [90m 575 |[39m               }[0m
+
+ERROR in src/components/VideoPlayer.tsx:933:11
+TS2322: Type '{ isLive: true; viewerCount: number; duration: number; streamTitle: string; streamQuality: string; }' is not assignable to type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  Property 'duration' does not exist on type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  [0m [90m 931 |[39m           isLive[33m=[39m{isLive}
+   [90m 932 |[39m           viewerCount[33m=[39m{stats[33m.[39mviewerCount}
+  [31m[1m>[22m[39m[90m 933 |[39m           duration[33m=[39m{streamInfo[33m.[39mduration}
+   [90m     |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 934 |[39m           streamTitle[33m=[39m{streamTitle}
+   [90m 935 |[39m           streamQuality[33m=[39m{streamInfo[33m.[39mquality}
+   [90m 936 |[39m         [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:1142:14
+TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  [0m [90m 1140 |[39m       
+   [90m 1141 |[39m       {[90m/* Add CSS for live video player styling */[39m}
+  [31m[1m>[22m[39m[90m 1142 |[39m       [33m<[39m[33mstyle[39m jsx[33m>[39m{[32m`[39m
+   [90m      |[39m              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 1143 |[39m [32m        .video-status {[39m
+   [90m 1144 |[39m [32m          position: absolute;[39m
+   [90m 1145 |[39m [32m          top: 0;[39m[0m
+
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\LiveStreamChat.tsx
+  Line 221:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 228:6:  React Hook useEffect has a missing dependency: 'isScrolled'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamOverlay.tsx
+  Line 70:6:   React Hook useEffect has a missing dependency: 'controlsTimeout'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  Line 124:6:  React Hook useEffect has a missing dependency: 'handleChatResizeMove'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\LiveStreamService.tsx
+  Line 126:6:  React Hook useCallback has a missing dependency: 'streamInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 224:11:  'finalStreamUrl' is assigned a value but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  Line 293:6:   React Hook useCallback has missing dependencies: 'enableScreenCapture' and 'startScreenCapture'. Either include them or remove the dependency array                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 293:86:  'initializePlayer' was used before it was defined                                                                                                                                                                                                                                                          @typescript-eslint/no-use-before-define
+  Line 547:17:  'techName' is assigned a value but never used                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  Line 611:6:   React Hook useCallback has missing dependencies: 'checkStreamStatus' and 'retryInterval'. Either include them or remove the dependency array. If 'setDebugInfo' needs the current value of 'retryInterval', you can also switch to useReducer instead of useState and read 'retryInterval' in the reducer  react-hooks/exhaustive-deps
+  Line 707:6:   React Hook useCallback has a missing dependency: 'stopScreenCapture'. Either include it or remove the dependency array                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+ERROR in src/components/LiveStreamChat.tsx:2:28
+TS2307: Cannot find module 'socket.io-client' or its corresponding type declarations.
+  [0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect[33m,[39m useRef } [36mfrom[39m [32m'react'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { io[33m,[39m [33mSocket[39m } [36mfrom[39m [32m'socket.io-client'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 3 |[39m [36mimport[39m { [33mAPI_SERVER_URL[39m } [36mfrom[39m [32m'../config'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m [32m'./LiveStreamChat.css'[39m[33m;[39m
+   [90m 5 |[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:157:47
+TS7006: Parameter 'info' implicitly has an 'any' type.
+  [0m [90m 155 |[39m
+   [90m 156 |[39m   [90m// Function to handle stream info updates[39m
+  [31m[1m>[22m[39m[90m 157 |[39m   [36mconst[39m handleStreamInfoUpdate [33m=[39m useCallback((info) [33m=>[39m {
+   [90m     |[39m                                               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 158 |[39m     [36mif[39m (info) {
+   [90m 159 |[39m       setIsLive(info[33m.[39misActive)[33m;[39m
+   [90m 160 |[39m       setStreamInfo({[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2448: Block-scoped variable 'initializePlayer' used before its declaration.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:293:86
+TS2454: Variable 'initializePlayer' is used before being assigned.
+  [0m [90m 291 |[39m       }
+   [90m 292 |[39m     }
+  [31m[1m>[22m[39m[90m 293 |[39m   }[33m,[39m [apiServerUrl[33m,[39m streamUrl[33m,[39m retryCount[33m,[39m maxRetries[33m,[39m retryInterval[33m,[39m cleanupPlayer[33m,[39m initializePlayer])[33m;[39m
+   [90m     |[39m                                                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 294 |[39m
+   [90m 295 |[39m   [90m// Setup audio analyzer to visualize audio levels[39m
+   [90m 296 |[39m   [36mconst[39m setupAudioAnalyser [33m=[39m useCallback(() [33m=>[39m {[0m
+
+ERROR in src/components/VideoPlayer.tsx:512:37
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 510 |[39m           [36mthis[39m[33m.[39mon([32m'seeking'[39m[33m,[39m () [33m=>[39m {
+   [90m 511 |[39m             [36mconst[39m currentTime [33m=[39m [36mthis[39m[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 512 |[39m             [36mconst[39m latestTime [33m=[39m [36mthis[39m[33m.[39mliveTracker[33m?[39m[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 513 |[39m             
+   [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:516:44
+TS18048: 'currentTime' is possibly 'undefined'.
+  [0m [90m 514 |[39m             [90m// Calculate latency for live streams[39m
+   [90m 515 |[39m             [36mif[39m (latestTime) {
+  [31m[1m>[22m[39m[90m 516 |[39m               [36mconst[39m latency [33m=[39m latestTime [33m-[39m currentTime[33m;[39m
+   [90m     |[39m                                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 517 |[39m               setStats(prevStats [33m=>[39m ({
+   [90m 518 |[39m                 [33m...[39mprevStats[33m,[39m
+   [90m 519 |[39m                 latency[33m:[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m latency)[0m
+
+ERROR in src/components/VideoPlayer.tsx:526:37
+TS2551: Property 'controlBar' does not exist on type 'Player'. Did you mean 'controls'?
+  [0m [90m 524 |[39m           [90m// Add live edge seeking button for live streams[39m
+   [90m 525 |[39m           [36mif[39m (enableLowLatency) {
+  [31m[1m>[22m[39m[90m 526 |[39m             [36mconst[39m seekToLive [33m=[39m [36mthis[39m[33m.[39mcontrolBar[33m.[39maddChild([32m'button'[39m[33m,[39m {
+   [90m     |[39m                                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 527 |[39m               className[33m:[39m [32m'vjs-seek-to-live-button vjs-button'[39m[33m,[39m
+   [90m 528 |[39m               title[33m:[39m [32m'Go to Live Edge'[39m
+   [90m 529 |[39m             })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:534:26
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 532 |[39m               seekToLive[33m.[39mel_[33m.[39minnerHTML [33m=[39m [32m'<span>LIVE</span>'[39m[33m;[39m
+   [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+   [90m     |[39m                          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:535:24
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 533 |[39m               seekToLive[33m.[39mel_[33m.[39monclick [33m=[39m () [33m=>[39m {
+   [90m 534 |[39m                 [36mif[39m ([36mthis[39m[33m.[39mliveTracker) {
+  [31m[1m>[22m[39m[90m 535 |[39m                   [36mthis[39m[33m.[39mliveTracker[33m.[39mseekToLiveEdge()[33m;[39m
+   [90m     |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 536 |[39m                 }
+   [90m 537 |[39m               }[33m;[39m
+   [90m 538 |[39m             }[0m
+
+ERROR in src/components/VideoPlayer.tsx:570:34
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 568 |[39m             
+   [90m 569 |[39m             [90m// Calculate latency for live streams[39m
+  [31m[1m>[22m[39m[90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m     |[39m                                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+   [90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:572:39
+TS2339: Property 'liveTracker' does not exist on type 'Player'.
+  [0m [90m 570 |[39m             [36mif[39m (isLive [33m&&[39m player[33m.[39mliveTracker) {
+   [90m 571 |[39m               [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 572 |[39m               [36mconst[39m liveEdge [33m=[39m player[33m.[39mliveTracker[33m.[39mliveCurrentTime()[33m;[39m
+   [90m     |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 573 |[39m               [36mif[39m (liveEdge [33m&&[39m currentTime) {
+   [90m 574 |[39m                 latency [33m=[39m [33mMath[39m[33m.[39mmax([35m0[39m[33m,[39m liveEdge [33m-[39m currentTime)[33m;[39m
+   [90m 575 |[39m               }[0m
+
+ERROR in src/components/VideoPlayer.tsx:933:11
+TS2322: Type '{ isLive: true; viewerCount: number; duration: number; streamTitle: string; streamQuality: string; }' is not assignable to type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  Property 'duration' does not exist on type 'IntrinsicAttributes & LiveStreamOverlayProps'.
+  [0m [90m 931 |[39m           isLive[33m=[39m{isLive}
+   [90m 932 |[39m           viewerCount[33m=[39m{stats[33m.[39mviewerCount}
+  [31m[1m>[22m[39m[90m 933 |[39m           duration[33m=[39m{streamInfo[33m.[39mduration}
+   [90m     |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 934 |[39m           streamTitle[33m=[39m{streamTitle}
+   [90m 935 |[39m           streamQuality[33m=[39m{streamInfo[33m.[39mquality}
+   [90m 936 |[39m         [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:1142:14
+TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  [0m [90m 1140 |[39m       
+   [90m 1141 |[39m       {[90m/* Add CSS for live video player styling */[39m}
+  [31m[1m>[22m[39m[90m 1142 |[39m       [33m<[39m[33mstyle[39m jsx[33m>[39m{[32m`[39m
+   [90m      |[39m              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 1143 |[39m [32m        .video-status {[39m
+   [90m 1144 |[39m [32m          position: absolute;[39m
+   [90m 1145 |[39m [32m          top: 0;[39m[0m
+

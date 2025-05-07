@@ -1,0 +1,3 @@
+@echo off
+echo Starting Live Video Player...
+node server/server.js

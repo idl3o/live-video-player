@@ -1,14 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import * as dotenv from 'dotenv';
-import NodeMediaServer from 'node-media-server';
 import path from 'path';
+import fs from 'fs';
+import NodeMediaServer from 'node-media-server';
+import { ChatService } from './services/ChatService';
+import dotenv from 'dotenv';
 import { execSync } from 'child_process';
-import net from 'net';
-import os from 'os';
-import { exec } from 'child_process';
-import util from 'util';
-import http from 'http';
+import { authRoutes } from './routes/authRoutes';
+import { authMiddleware } from './middleware/authMiddleware';
+import { AuthService } from './services/AuthService';
 
 // Load environment variables
 dotenv.config();
@@ -26,6 +26,26 @@ function isPortListening(port: number): boolean {
     return false;
   }
 }
+
+// Create Express application
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Set up HTTP server
+const http = require('http').createServer(app);
+const PORT = process.env.PORT || 8000;
+
+// Path for storing recorded streams
+const recordingsPath = path.join(__dirname, '../media/recordings');
+
+// Ensure recordings directory exists
+if (!fs.existsSync(recordingsPath)) {
+  fs.mkdirSync(recordingsPath, { recursive: true });
+}
+
+// Initialize AuthService
+const authService = new AuthService();
 
 // Configure Node-Media-Server for RTMP and HTTP-FLV with explicit host binding
 const nmsConfig = {
@@ -52,9 +72,9 @@ const nmsConfig = {
     host: '0.0.0.0'  // Explicitly bind to all network interfaces
   },
   auth: {
-    play: false,
-    publish: false,  // Set to false to disable authentication for testing
-    secret: process.env.STREAM_SECRET || 'nostreamsecret' // Add for future use
+    play: true,      // Enable authentication for playback
+    publish: true,   // Enable authentication for publishing
+    secret: process.env.STREAM_SECRET || 'nostreamsecret'
   },
   trans: {
     ffmpeg: process.env.FFMPEG_PATH || 'ffmpeg',
@@ -92,7 +112,7 @@ nms.on('doneConnect', (id, args) => {
   }
 });
 
-// Add this more robust prePublish handler to better diagnose OBS connection issues
+// Update prePublish handler with authentication
 nms.on('prePublish', (id, StreamPath, args) => {
   console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
   
@@ -124,6 +144,36 @@ nms.on('prePublish', (id, StreamPath, args) => {
     console.warn(`[Warning] No stream key detected in the path. The stream might not be accessible.`);
     console.warn(`[Hint] Make sure OBS has a stream key configured`);
   }
+  
+  // Authentication check for publishing streams
+  if (nmsConfig.auth.publish) {
+    let streamKey = pathParts[2];
+    
+    // If there's a query string with token, extract it
+    if (args.query && args.query.token) {
+      try {
+        const verified = authService.verifyStreamToken(args.query.token);
+        if (!verified) {
+          let session = nms.getSession(id);
+          session.reject();
+          console.log('[Authentication] Stream rejected - invalid token');
+          return;
+        }
+        console.log('[Authentication] Stream authorized with valid token');
+      } catch (error) {
+        let session = nms.getSession(id);
+        session.reject();
+        console.log('[Authentication] Stream rejected - token verification error');
+        return;
+      }
+    } else {
+      // Legacy stream key check (you can implement your own logic here)
+      let session = nms.getSession(id);
+      session.reject();
+      console.log('[Authentication] Stream rejected - no token provided');
+      return;
+    }
+  }
 });
 
 nms.on('postPublish', (id, StreamPath, args) => {
@@ -132,6 +182,41 @@ nms.on('postPublish', (id, StreamPath, args) => {
 
 nms.on('donePublish', (id, StreamPath, args) => {
   console.log('[NodeEvent on donePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+});
+
+// Update prePlay handler with authentication
+nms.on('prePlay', (id, StreamPath, args) => {
+  console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  
+  // Authentication check for viewing streams
+  if (nmsConfig.auth.play) {
+    // If there's a query string with token, extract it
+    if (args.query && args.query.token) {
+      try {
+        const verified = authService.verifyStreamToken(args.query.token);
+        if (!verified) {
+          let session = nms.getSession(id);
+          session.reject();
+          console.log('[Authentication] Stream playback rejected - invalid token');
+          return;
+        }
+        console.log('[Authentication] Stream playback authorized with valid token');
+      } catch (error) {
+        let session = nms.getSession(id);
+        session.reject();
+        console.log('[Authentication] Stream playback rejected - token verification error');
+        return;
+      }
+    } else {
+      // For demo purposes, we can make it more permissive for playback
+      console.log('[Authentication] Stream playback allowed without token (demo mode)');
+      // If you want to enforce authentication:
+      // let session = nms.getSession(id);
+      // session.reject();
+      // console.log('[Authentication] Stream playback rejected - no token provided');
+      // return;
+    }
+  }
 });
 
 // Run the server with proper error handling and connection verification
@@ -157,313 +242,46 @@ try {
   console.error(`[RTMP] Failed to start server: ${error}`);
 }
 
-// Initialize Express app
-const app = express();
+// Initialize ChatService
+const chatService = new ChatService(http);
 
-// Enhanced CORS configuration for Express
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-app.use(express.json());
+// API Routes
+app.use('/api/auth', authRoutes);
 
-// API endpoints
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Live Video Server is running' });
+// Protect API routes that need authentication
+app.use('/api/streams', authMiddleware, (req, res, next) => {
+  // Your protected stream routes
+  next();
 });
 
-// Add endpoint to test RTMP connectivity with enhanced diagnostics
-app.get('/api/test-rtmp', async (req, res) => {
-  try {
-    const client = new net.Socket();
-    let isConnectable = false;
-    const firewallTestComplete = false;
-    
-    // Try to detect firewall issues by measuring response time
-    console.log(`[RTMP Test] Attempting to connect to RTMP server on port ${RTMP_PORT}...`);
-    
-    const testStart = Date.now();
-    const testResult = await new Promise((resolve) => {
-      client.connect(RTMP_PORT, '127.0.0.1', () => {
-        isConnectable = true;
-        const connectionTime = Date.now() - testStart;
-        console.log(`[RTMP Test] Connected successfully in ${connectionTime}ms`);
-        client.destroy();
-        resolve({ 
-          success: true, 
-          message: 'RTMP server is accepting connections', 
-          connectionTime,
-          serverStatus: 'running'
-        });
-      });
-      
-      client.on('error', (err) => {
-        const errorTime = Date.now() - testStart;
-        console.error(`[RTMP Test] Connection failed: ${err.message} after ${errorTime}ms`);
-        
-        // Different error message based on error type
-        let errorDetail = 'Unknown connection issue';
-        let possibleSolution = 'Check server logs for more details';
-        
-        if (err.code === 'ECONNREFUSED') {
-          errorDetail = 'Connection refused - RTMP server might not be running';
-          possibleSolution = 'Ensure the RTMP server is started and bound to the correct port';
-        } else if (err.code === 'ETIMEDOUT') {
-          errorDetail = 'Connection timed out - Likely firewall blocking';
-          possibleSolution = 'Check Windows Defender or other firewall settings';
-        }
-        
-        resolve({ 
-          success: false, 
-          message: `Connection error: ${err.message}`, 
-          error: err.message,
-          errorCode: err.code,
-          errorDetail,
-          possibleSolution,
-          responseTime: errorTime
-        });
-      });
-      
-      // Add timeout
-      setTimeout(() => {
-        if (!isConnectable) {
-          console.error('[RTMP Test] Connection timed out after 3000ms - Likely firewall blocking');
-          client.destroy();
-          resolve({ 
-            success: false, 
-            message: 'Connection timed out', 
-            errorDetail: 'Connection attempt timed out - Likely firewall blocking',
-            possibleSolution: 'Check Windows Defender or other firewall settings',
-            responseTime: 3000
-          });
-        }
-      }, 3000);
-    });
-    
-    // Check if RTMP server is actually running
-    const rtmpServerRunning = isPortListening(RTMP_PORT);
-    
-    // Add additional information to help with debugging
-    const responseData = {
-      ...(testResult as any),
-      rtmpPort: RTMP_PORT,
-      serverRunning: rtmpServerRunning,
-      portStatus: rtmpServerRunning ? 'listening' : 'not listening',
-      testTimestamp: new Date().toISOString(),
-      obsServerUrl: `rtmp://localhost:${RTMP_PORT}/live`,
-      obsStreamKey: 'YOUR_STREAM_KEY',
-      firewall: {
-        status: 'unknown',
-        checkMessage: 'Cannot automatically verify firewall settings'
-      },
-      troubleshooting: [
-        'Check if OBS is configured with the correct RTMP URL format',
-        `Ensure the URL in OBS is: rtmp://{server}:${RTMP_PORT}/live`,
-        'Try connecting with a different network adapter/IP address',
-        'Temporarily disable Windows Defender or other firewall software',
-        `Run "netstat -ano | findstr :${RTMP_PORT}" to verify the port is listening`
-      ]
+// API endpoint for retrieving active streams
+app.get('/api/streams', (req, res) => {
+  const activeStreams = nms.getStreams();
+  
+  const streamData = Object.entries(activeStreams).map(([key, value]) => {
+    const parts = key.split('/');
+    return {
+      id: key,
+      app: parts[1],
+      stream: parts[2],
+      publisher: value.publisher ? {
+        type: value.publisher.type,
+        clientId: value.publisher.clientId,
+        ip: value.publisher.ip,
+        audio: value.publisher.audio,
+        video: value.publisher.video
+      } : null,
+      subscribers: Object.keys(value.subscribers).length
     };
-    
-    res.status((testResult as any).success ? 200 : 500).json(responseData);
-  } catch (error: unknown) {
-    console.error('[RTMP Test] Failed:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Failed to test RTMP connection', 
-      error: error instanceof Error ? error.message : String(error),
-      testTimestamp: new Date().toISOString()
-    });
-  }
+  });
+  
+  res.json({
+    success: true,
+    streams: streamData
+  });
 });
 
-// Add OBS-specific configuration information endpoint
-app.get('/api/obs-config', async (req, res) => {
-  try {
-    // Get network interfaces
-    const networkInterfaces = os.networkInterfaces();
-    const serverAddresses: string[] = [];
-    
-    // Get all IPv4 addresses that aren't internal
-    Object.keys(networkInterfaces).forEach((ifaceName) => {
-      const iface = networkInterfaces[ifaceName];
-      if (iface) {
-        iface.forEach((details) => {
-          if (details.family === 'IPv4' && !details.internal) {
-            serverAddresses.push(details.address);
-          }
-        });
-      }
-    });
-    
-    // Add localhost
-    serverAddresses.push('127.0.0.1');
-    serverAddresses.push('localhost');
-    
-    // Get RTMP server status
-    const rtmpServerRunning = nms ? true : false;
-    const rtmpPort = nmsConfig.rtmp?.port || 1935;
-    const httpPort = nmsConfig.http?.port || 8000;
-    
-    // Create OBS connection URLs
-    const obsUrls = serverAddresses.map(addr => 
-      `rtmp://${addr}:${rtmpPort}/live`
-    );
-    
-    // Generate troubleshooting tips
-    const tips = [
-      'Ensure OBS is configured to use the correct RTMP URL',
-      'Check that your stream key matches the expected format',
-      'Verify that no firewall is blocking the RTMP port',
-      'Ensure no other software is using the same port',
-    ];
-    
-    // Test each address accessibility
-    const connectionTestResults: Record<string, boolean> = {};
-    
-    // Return the data to client
-    res.json({
-      rtmp_server_status: rtmpServerRunning ? 'running' : 'stopped',
-      http_server_status: 'running',
-      rtmp_port: rtmpPort,
-      http_port: httpPort,
-      server_addresses: serverAddresses,
-      obs_urls: obsUrls,
-      troubleshooting_tips: tips,
-      connection_test_results: connectionTestResults
-    });
-  } catch (error) {
-    console.error('Error in OBS config endpoint:', error);
-    res.status(500).json({ error: 'Failed to get server configuration' });
-  }
-});
-
-// Add a connection test endpoint
-app.post('/api/test-connection', async (req, res) => {
-  try {
-    const { url, streamKey } = req.body;
-    
-    if (!url) {
-      return res.status(400).json({ error: 'URL is required' });
-    }
-    
-    // Parse the URL
-    let host: string, port: number;
-    const rtmpMatch = url.match(/rtmp:\/\/([^:\/]+)(?::(\d+))?/);
-    
-    if (rtmpMatch) {
-      host = rtmpMatch[1];
-      port = rtmpMatch[2] ? parseInt(rtmpMatch[2]) : 1935;
-    } else {
-      return res.status(400).json({ error: 'Invalid RTMP URL format' });
-    }
-    
-    // Test TCP connection to the RTMP port
-    const socket = new net.Socket();
-    let connectionSuccess = false;
-    
-    const connectionPromise = new Promise<void>((resolve, reject) => {
-      socket.setTimeout(5000);
-      
-      socket.on('connect', () => {
-        connectionSuccess = true;
-        socket.end();
-        resolve();
-      });
-      
-      socket.on('timeout', () => {
-        socket.destroy();
-        reject(new Error('Connection timeout'));
-      });
-      
-      socket.on('error', (err) => {
-        reject(err);
-      });
-      
-      socket.connect(port, host);
-    });
-    
-    try {
-      await connectionPromise;
-      res.json({
-        success: connectionSuccess,
-        message: 'Connection successful',
-        target: { host, port }
-      });
-    } catch (error: any) {
-      res.json({
-        success: false,
-        message: `Connection failed: ${error.message}`,
-        target: { host, port }
-      });
-    }
-  } catch (error: any) {
-    console.error('Error testing connection:', error);
-    res.status(500).json({ 
-      error: 'Connection test failed',
-      message: error.message
-    });
-  }
-});
-
-// Add a diagnostic tool endpoint
-app.get('/api/diagnostics', async (req, res) => {
-  try {
-    const execPromise = util.promisify(exec);
-    const diagnostics: Record<string, any> = {
-      timestamp: new Date().toISOString(),
-      os: {
-        type: os.type(),
-        platform: os.platform(),
-        release: os.release(),
-        arch: os.arch()
-      },
-      network: {
-        interfaces: os.networkInterfaces()
-      },
-      rtmp_server: {
-        running: nms ? true : false,
-        config: nmsConfig
-      }
-    };
-    
-    // Check if ports are in use
-    try {
-      const { stdout: netstatOutput } = await execPromise('netstat -ano | findstr :1935');
-      diagnostics.ports = {
-        rtmp_port_check: netstatOutput.trim().split('\n')
-      };
-    } catch (error) {
-      diagnostics.ports = {
-        rtmp_port_check: 'No process using port 1935'
-      };
-    }
-    
-    res.json(diagnostics);
-  } catch (error) {
-    console.error('Error in diagnostics endpoint:', error);
-    res.status(500).json({ error: 'Failed to run diagnostics' });
-  }
-});
-
-// Start Express server
-app.listen(API_PORT, () => {
-  console.log(`API Server is running on port ${API_PORT}`);
-  console.log(`RTMP Server is running on port ${nmsConfig.rtmp.port}`);
-  console.log(`HTTP-FLV Server is running on port ${nmsConfig.http.port}`);
-  console.log(`Stream a video using OBS: rtmp://localhost:${nmsConfig.rtmp.port}/live/STREAM_KEY`);
-  console.log(`Watch a stream: http://localhost:${nmsConfig.http.port}/live/STREAM_KEY.flv`);
-  console.log(`
-  For OBS configuration, use the following settings:
-  - Service: Custom...
-  - Server: rtmp://<YOUR_SERVER_IP>:${nmsConfig.rtmp.port}/live
-  - Stream Key: YOUR_STREAM_KEY
-
-  Troubleshooting Tips:
-  - Ensure no firewall is blocking port ${RTMP_PORT}
-  - Try multiple server addresses if one doesn't work
-  - Make sure 'live' is included in the RTMP URL path
-  - Check Windows Defender or antivirus settings
-  `);
+// Start the HTTP server for API and Chat
+http.listen(API_PORT, () => {
+  console.log(`[API] Server is running on port ${API_PORT}`);
 });

@@ -1,0 +1,15 @@
+{
+    "version":  "1.0.0",
+    "name":  "live-video-player",
+    "description":  "Live Video Player - Production Build",
+    "scripts":  {
+                    "start":  "node server/server.js"
+                },
+    "dependencies":  {
+
+                     },
+    "engines":  {
+                    "node":  "\u003e=14.0.0"
+                },
+    "main":  "server/server.js"
+}
