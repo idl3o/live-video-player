@@ -2558,3 +2558,161 @@ TS1208: 'IPFSImport.ts' cannot be compiled under '--isolatedModules' because it 
 ERROR in src/services/ipfs/IPFSService.ts
 TS1208: 'IPFSService.ts' cannot be compiled under '--isolatedModules' because it is considered a global script file. Add an import, export, or an empty 'export {}' statement to make it a module.
 
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 6:46:    'STREAMING_CONFIG' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+  Line 6:64:    'HLS_CONFIG' is defined but never used                                                                                    @typescript-eslint/no-unused-vars
+  Line 7:8:     'LiveStreamOverlay' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+  Line 8:8:     'LiveStreamService' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+  Line 14:15:   'Socket' is defined but never used                                                                                        @typescript-eslint/no-unused-vars
+  Line 106:10:  'showDebug' is assigned a value but never used                                                                            @typescript-eslint/no-unused-vars
+  Line 106:21:  'setShowDebug' is assigned a value but never used                                                                         @typescript-eslint/no-unused-vars
+  Line 147:18:  'setVolume' is assigned a value but never used                                                                            @typescript-eslint/no-unused-vars
+  Line 148:19:  'setIsMuted' is assigned a value but never used                                                                           @typescript-eslint/no-unused-vars
+  Line 149:10:  'audioLevels' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  Line 156:10:  'showChat' is assigned a value but never used                                                                             @typescript-eslint/no-unused-vars
+  Line 156:20:  'setShowChat' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  Line 500:6:   React Hook useCallback has a missing dependency: 'initializePlayer'. Either include it or remove the dependency array     react-hooks/exhaustive-deps
+  Line 543:6:   React Hook useCallback has a missing dependency: 'initializePlayer'. Either include it or remove the dependency array     react-hooks/exhaustive-deps
+  Line 791:6:   React Hook useCallback has a missing dependency: 'showAudioVisualizer'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\StreamList.tsx
+  Line 104:9:  'toggleDebugMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src\components\VideoPlayer.tsx
+  Line 6:46:    'STREAMING_CONFIG' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+  Line 6:64:    'HLS_CONFIG' is defined but never used                                                                                    @typescript-eslint/no-unused-vars
+  Line 7:8:     'LiveStreamOverlay' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+  Line 8:8:     'LiveStreamService' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+  Line 14:15:   'Socket' is defined but never used                                                                                        @typescript-eslint/no-unused-vars
+  Line 106:10:  'showDebug' is assigned a value but never used                                                                            @typescript-eslint/no-unused-vars
+  Line 106:21:  'setShowDebug' is assigned a value but never used                                                                         @typescript-eslint/no-unused-vars
+  Line 147:18:  'setVolume' is assigned a value but never used                                                                            @typescript-eslint/no-unused-vars
+  Line 148:19:  'setIsMuted' is assigned a value but never used                                                                           @typescript-eslint/no-unused-vars
+  Line 149:10:  'audioLevels' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  Line 156:10:  'showChat' is assigned a value but never used                                                                             @typescript-eslint/no-unused-vars
+  Line 156:20:  'setShowChat' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  Line 500:6:   React Hook useCallback has a missing dependency: 'initializePlayer'. Either include it or remove the dependency array     react-hooks/exhaustive-deps
+  Line 543:6:   React Hook useCallback has a missing dependency: 'initializePlayer'. Either include it or remove the dependency array     react-hooks/exhaustive-deps
+  Line 791:6:   React Hook useCallback has a missing dependency: 'showAudioVisualizer'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+ERROR in src/components/LiveStreamChat.tsx:51:40
+TS2709: Cannot use namespace 'SocketIOClient' as a type.
+  [0m [90m 49 |[39m }) [33m=>[39m {
+   [90m 50 |[39m   [90m// State[39m
+  [31m[1m>[22m[39m[90m 51 |[39m   [36mconst[39m [socket[33m,[39m setSocket] [33m=[39m useState[33m<[39m[33mSocketIOClient[39m [33m|[39m [36mnull[39m[33m>[39m([36mnull[39m)[33m;[39m
+   [90m    |[39m                                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 52 |[39m   [36mconst[39m [isConnected[33m,[39m setIsConnected] [33m=[39m useState[33m<[39m[33mboolean[39m[33m>[39m([36mfalse[39m)[33m;[39m
+   [90m 53 |[39m   [36mconst[39m [messages[33m,[39m setMessages] [33m=[39m useState[33m<[39m[33mChatMessage[39m[][33m>[39m([])[33m;[39m
+   [90m 54 |[39m   [36mconst[39m [messageInput[33m,[39m setMessageInput] [33m=[39m useState[33m<[39m[33mstring[39m[33m>[39m([32m''[39m)[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:230:27
+TS2339: Property 'pause' does not exist on type 'Player'.
+  [0m [90m 228 |[39m     [36mif[39m (playerRef[33m.[39mcurrent) {
+   [90m 229 |[39m       [36mtry[39m {
+  [31m[1m>[22m[39m[90m 230 |[39m         playerRef[33m.[39mcurrent[33m.[39mpause()[33m;[39m
+   [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 231 |[39m         playerRef[33m.[39mcurrent[33m.[39mdispose()[33m;[39m
+   [90m 232 |[39m       } [36mcatch[39m (e) {
+   [90m 233 |[39m         console[33m.[39merror([32m'Error disposing player:'[39m[33m,[39m e)[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:231:27
+TS2339: Property 'dispose' does not exist on type 'Player'.
+  [0m [90m 229 |[39m       [36mtry[39m {
+   [90m 230 |[39m         playerRef[33m.[39mcurrent[33m.[39mpause()[33m;[39m
+  [31m[1m>[22m[39m[90m 231 |[39m         playerRef[33m.[39mcurrent[33m.[39mdispose()[33m;[39m
+   [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 232 |[39m       } [36mcatch[39m (e) {
+   [90m 233 |[39m         console[33m.[39merror([32m'Error disposing player:'[39m[33m,[39m e)[33m;[39m
+   [90m 234 |[39m       }[0m
+
+ERROR in src/components/VideoPlayer.tsx:321:46
+TS2339: Property 'el' does not exist on type 'Player'.
+  [0m [90m 319 |[39m       
+   [90m 320 |[39m       [90m// Get video element[39m
+  [31m[1m>[22m[39m[90m 321 |[39m       [36mconst[39m videoElement [33m=[39m playerRef[33m.[39mcurrent[33m.[39mel()[33m.[39mquerySelector([32m'video'[39m)[33m;[39m
+   [90m     |[39m                                              [31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 322 |[39m       [36mif[39m ([33m![39mvideoElement) {
+   [90m 323 |[39m         console[33m.[39mwarn([32m'Video element not found'[39m)[33m;[39m
+   [90m 324 |[39m         [36mreturn[39m[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:566:45
+TS2339: Property 'paused' does not exist on type 'Player'.
+  [0m [90m 564 |[39m       [90m// Store current time[39m
+   [90m 565 |[39m       [36mconst[39m currentTime [33m=[39m playerRef[33m.[39mcurrent[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 566 |[39m       [36mconst[39m wasPlaying [33m=[39m [33m![39mplayerRef[33m.[39mcurrent[33m.[39mpaused()[33m;[39m
+   [90m     |[39m                                             [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 567 |[39m       
+   [90m 568 |[39m       [90m// Update source[39m
+   [90m 569 |[39m       playerRef[33m.[39mcurrent[33m.[39msrc({[0m
+
+ERROR in src/components/VideoPlayer.tsx:569:25
+TS2339: Property 'src' does not exist on type 'Player'.
+  [0m [90m 567 |[39m       
+   [90m 568 |[39m       [90m// Update source[39m
+  [31m[1m>[22m[39m[90m 569 |[39m       playerRef[33m.[39mcurrent[33m.[39msrc({
+   [90m     |[39m                         [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 570 |[39m         src[33m:[39m url[33m,[39m
+   [90m 571 |[39m         type[33m:[39m type [33m===[39m [32m'hls'[39m [33m?[39m [32m'application/x-mpegURL'[39m [33m:[39m [32m'video/mp4'[39m
+   [90m 572 |[39m       })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:580:33
+TS2339: Property 'play' does not exist on type 'Player'.
+  [0m [90m 578 |[39m             playerRef[33m.[39mcurrent[33m.[39mcurrentTime(currentTime)[33m;[39m
+   [90m 579 |[39m             [36mif[39m (wasPlaying) {
+  [31m[1m>[22m[39m[90m 580 |[39m               playerRef[33m.[39mcurrent[33m.[39mplay()[33m;[39m
+   [90m     |[39m                                 [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 581 |[39m             }
+   [90m 582 |[39m           }
+   [90m 583 |[39m         })[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:588:27
+TS2339: Property 'play' does not exist on type 'Player'.
+  [0m [90m 586 |[39m       [90m// Play if it was playing[39m
+   [90m 587 |[39m       [36mif[39m (wasPlaying) {
+  [31m[1m>[22m[39m[90m 588 |[39m         playerRef[33m.[39mcurrent[33m.[39mplay()[33m.[39m[36mcatch[39m(handlePlayError)[33m;[39m
+   [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 589 |[39m       }
+   [90m 590 |[39m     }
+   [90m 591 |[39m   }[33m,[39m [type[33m,[39m isLive[33m,[39m handlePlayError])[33m;[39m[0m
+
+ERROR in src/components/VideoPlayer.tsx:604:35
+TS2339: Property 'buffered' does not exist on type 'Player'.
+  [0m [90m 602 |[39m           [36mconst[39m bufferInfo [33m=[39m player[33m.[39mliveTracker[33m?[39m[33m.[39mliveCurrentTime[33m?[39m[33m.[39m() [33m||[39m [35m0[39m[33m;[39m
+   [90m 603 |[39m           [36mconst[39m currentTime [33m=[39m player[33m.[39mcurrentTime()[33m;[39m
+  [31m[1m>[22m[39m[90m 604 |[39m           [36mconst[39m buffered [33m=[39m player[33m.[39mbuffered()[33m;[39m
+   [90m     |[39m                                   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 605 |[39m           
+   [90m 606 |[39m           [36mlet[39m bufferEnd [33m=[39m [35m0[39m[33m;[39m
+   [90m 607 |[39m           [36mif[39m (buffered [33m&&[39m buffered[33m.[39mlength [33m>[39m [35m0[39m) {[0m
+
+ERROR in src/components/VideoPlayer.tsx:702:22
+TS2349: This expression is not callable.
+  Type 'typeof import("video.js")' has no call signatures.
+  [0m [90m 700 |[39m       }[33m;[39m
+   [90m 701 |[39m
+  [31m[1m>[22m[39m[90m 702 |[39m       [36mconst[39m player [33m=[39m videojs(videoRef[33m.[39mcurrent[33m,[39m options)[33m;[39m
+   [90m     |[39m                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 703 |[39m       playerRef[33m.[39mcurrent [33m=[39m player[33m;[39m
+   [90m 704 |[39m
+   [90m 705 |[39m       [90m// Configure player based on stream type[39m[0m
+
+ERROR in src/services/ipfs/IPFSImport.ts
+TS1208: 'IPFSImport.ts' cannot be compiled under '--isolatedModules' because it is considered a global script file. Add an import, export, or an empty 'export {}' statement to make it a module.
+
+ERROR in src/services/ipfs/IPFSService.ts
+TS1208: 'IPFSService.ts' cannot be compiled under '--isolatedModules' because it is considered a global script file. Add an import, export, or an empty 'export {}' statement to make it a module.
+

@@ -53,3 +53,29 @@ src/services/ChatService.ts(3,30): error TS2307: Cannot find module 'uuid' or it
   diagnosticCodes: [ 2307, 2307 ]
 }
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/services/ChatService.ts(2,50): error TS2307: Cannot find module 'socket.io' or its corresponding type declarations.
+src/services/ChatService.ts(3,30): error TS2307: Cannot find module 'uuid' or its corresponding type declarations.
+
+    at createTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2307, 2307 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
