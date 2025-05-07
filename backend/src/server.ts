@@ -7,7 +7,7 @@ import { ChatService } from './services/ChatService';
 import dotenv from 'dotenv';
 import { execSync } from 'child_process';
 import { authRoutes } from './routes/authRoutes';
-import { authMiddleware } from './middleware/authMiddleware';
+import { authenticate as authMiddleware } from './middleware/authMiddleware';
 import { AuthService } from './services/AuthService';
 
 // Load environment variables

@@ -95,6 +95,19 @@ export class AuthService {
   }
 
   /**
+   * Verify a stream token (used for RTMP authentication)
+   */
+  verifyStreamToken(token: string): boolean {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET) as UserSession;
+      return decoded && decoded.allowedToStream ? true : false;
+    } catch (error) {
+      console.error('Stream token verification failed:', error);
+      return false;
+    }
+  }
+
+  /**
    * Get user by ID
    */
   getUserById(id: string): User | undefined {

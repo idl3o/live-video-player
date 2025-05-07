@@ -154,4 +154,4 @@ router.post('/create-streamer',
     }
 });
 
-export default router;
+export { router as authRoutes };

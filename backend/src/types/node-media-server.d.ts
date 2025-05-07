@@ -4,6 +4,7 @@ declare module 'node-media-server' {
     run(): void;
     stop(): void;
     getStreams(): Record<string, any>;
+    getSession(id: string): Session;
     
     // Event methods
     on(event: 'preConnect', listener: (id: string, args: any) => void): this;
@@ -12,6 +13,14 @@ declare module 'node-media-server' {
     on(event: 'prePublish', listener: (id: string, streamPath: string, args: any) => void): this;
     on(event: 'postPublish', listener: (id: string, streamPath: string, args: any) => void): this;
     on(event: 'donePublish', listener: (id: string, streamPath: string, args: any) => void): this;
+    on(event: 'prePlay', listener: (id: string, streamPath: string, args: any) => void): this;
+    on(event: 'postPlay', listener: (id: string, streamPath: string, args: any) => void): this;
+    on(event: 'donePlay', listener: (id: string, streamPath: string, args: any) => void): this;
+  }
+
+  export interface Session {
+    reject(): void;
+    accept(): void;
   }
 
   export interface NodeMediaServerConfig {
@@ -21,11 +30,21 @@ declare module 'node-media-server' {
       gop_cache?: boolean;
       ping?: number;
       ping_timeout?: number;
+      host?: string;
+      allow_origin?: string;
     };
     http?: {
       port?: number;
       allow_origin?: string;
       mediaroot?: string;
+      host?: string;
+      cors?: {
+        enabled?: boolean;
+        origin?: string;
+        methods?: string;
+        credentials?: boolean;
+        maxAge?: number;
+      };
     };
     https?: {
       port?: number;
@@ -41,5 +60,6 @@ declare module 'node-media-server' {
       ffmpeg?: string;
       tasks?: Array<any>;
     };
+    logType?: number;
   }
 }
