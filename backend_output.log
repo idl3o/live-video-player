@@ -1,0 +1,30 @@
+
+> backend@1.0.0 dev
+> nodemon --exec ts-node src/server.ts
+
+[33m[nodemon] 2.0.22[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/server.ts(209,17): error TS2339: Property 'code' does not exist on type 'Error'.
+src/server.ts(212,24): error TS2339: Property 'code' does not exist on type 'Error'.
+src/server.ts(221,26): error TS2339: Property 'code' does not exist on type 'Error'.
+
+    at createTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2339, 2339, 2339 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
