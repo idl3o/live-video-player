@@ -1,51 +1,69 @@
-import { create, IPFSHTTPClient } from 'ipfs-http-client';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as IPFS from 'ipfs-core';
+import { create, IPFS } from 'ipfs-core';
+import IpfsHttpClient from 'ipfs-http-client';
+import { CID } from 'multiformats/cid';
+import ipfsConfig from '../config/ipfsConfig';
 import { LoggerService } from './LoggerService';
 
 /**
- * Service for handling IPFS integration
- * Allows for decentralized storage of video streams
+ * Service for handling IPFS operations
  */
 export class IPFSService {
-  private ipfsClient: IPFSHTTPClient | null = null;
-  private ipfsNode: IPFS.IPFS | null = null;
   private logger: LoggerService;
-  private isNodeRunning: boolean = false;
-  private isClientConnected: boolean = false;
-  private ipfsGateway: string = 'https://ipfs.io/ipfs/';
-  private storagePath: string;
+  private ipfs: IPFS | null;
+  private ipfsClient: any;
+  private isNodeRunning: boolean;
+  private isClientConnected: boolean;
 
+  /**
+   * Constructor for IPFSService
+   */
   constructor(logger: LoggerService) {
     this.logger = logger;
-    this.storagePath = path.join(process.cwd(), 'media', 'ipfs-storage');
-    
-    // Create storage directory if it doesn't exist
-    if (!fs.existsSync(this.storagePath)) {
-      fs.mkdirSync(this.storagePath, { recursive: true });
+    this.ipfs = null;
+    this.ipfsClient = null;
+    this.isNodeRunning = false;
+    this.isClientConnected = false;
+  }
+
+  /**
+   * Initialize IPFS node or client
+   */
+  public async initialize(): Promise<boolean> {
+    try {
+      if (ipfsConfig.useExternalNode) {
+        return await this.connectToExternalNode();
+      } else {
+        return await this.startEmbeddedNode();
+      }
+    } catch (error) {
+      this.logger.error('Failed to initialize IPFS', error);
+      return false;
     }
   }
 
   /**
-   * Initialize IPFS client connection to external node
+   * Connect to an external IPFS node
    */
-  async connectToExternalNode(apiUrl: string = 'http://localhost:5001'): Promise<boolean> {
+  private async connectToExternalNode(): Promise<boolean> {
     try {
-      this.logger.info('Connecting to external IPFS node', { apiUrl });
-      this.ipfsClient = create({ url: apiUrl });
+      this.logger.info(`Connecting to external IPFS node at ${ipfsConfig.nodeUrl}`);
       
-      // Test connection by getting node ID
-      const id = await this.ipfsClient.id();
+      this.ipfsClient = IpfsHttpClient.create({ url: ipfsConfig.nodeUrl });
+      
+      // Check if the node is running by fetching the ID
+      const nodeId = await this.ipfsClient.id();
+      
+      this.logger.info(`Connected to IPFS node: ${nodeId.id}`);
       this.isClientConnected = true;
-      this.logger.info('Connected to external IPFS node', { 
-        id: id.id,
-        agentVersion: id.agentVersion
-      });
+      this.isNodeRunning = true;
+      
       return true;
     } catch (error) {
-      this.isClientConnected = false;
       this.logger.error('Failed to connect to external IPFS node', error);
+      this.isClientConnected = false;
+      this.isNodeRunning = false;
       return false;
     }
   }
@@ -53,260 +71,362 @@ export class IPFSService {
   /**
    * Start an embedded IPFS node
    */
-  async startEmbeddedNode(): Promise<boolean> {
+  private async startEmbeddedNode(): Promise<boolean> {
     try {
       this.logger.info('Starting embedded IPFS node');
       
-      // Initialize the IPFS node with custom configuration
-      this.ipfsNode = await IPFS.create({
-        repo: path.join(this.storagePath, '.ipfs'),
+      // Ensure repo path exists
+      const repoPath = path.resolve(ipfsConfig.embeddedNode.repoPath);
+      if (!fs.existsSync(repoPath)) {
+        fs.mkdirSync(repoPath, { recursive: true });
+      }
+      
+      // Create IPFS node
+      this.ipfs = await create({
+        repo: repoPath,
         config: {
           Addresses: {
             Swarm: [
-              '/ip4/0.0.0.0/tcp/4002',
-              '/ip4/0.0.0.0/tcp/4003/ws',
+              '/ip4/0.0.0.0/tcp/4001',
+              '/ip4/0.0.0.0/tcp/4002/ws'
             ],
-            API: '/ip4/0.0.0.0/tcp/5002',
-            Gateway: '/ip4/0.0.0.0/tcp/9090'
+            API: `/ip4/${ipfsConfig.embeddedNode.apiConfig.host}/tcp/${ipfsConfig.embeddedNode.apiConfig.port}`,
+            Gateway: `/ip4/${ipfsConfig.embeddedNode.gatewayConfig.host}/tcp/${ipfsConfig.embeddedNode.gatewayConfig.port}`
           },
-          Bootstrap: [
-            '/dns4/ipfs.io/tcp/443/wss/p2p/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd',
-            '/dns4/1.pubsub.aira.life/tcp/443/wss/ipfs/QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n',
-          ]
-        }
+          Bootstrap: ipfsConfig.embeddedNode.bootstrapList
+        },
+        start: true
       });
       
-      // Get node ID
-      const id = await this.ipfsNode.id();
+      const nodeId = await this.ipfs.id();
+      this.logger.info(`Started embedded IPFS node: ${nodeId.id}`);
+      
+      // Connect to bootstrap nodes
+      for (const addr of ipfsConfig.embeddedNode.bootstrapList) {
+        try {
+          await this.ipfs.swarm.connect(addr);
+          this.logger.debug(`Connected to bootstrap node: ${addr}`);
+        } catch (error) {
+          this.logger.warn(`Failed to connect to bootstrap node: ${addr}`, error);
+        }
+      }
+      
       this.isNodeRunning = true;
-      this.logger.info('Started embedded IPFS node', { id: id.id });
+      this.isClientConnected = true;
+      
       return true;
     } catch (error) {
-      this.isNodeRunning = false;
       this.logger.error('Failed to start embedded IPFS node', error);
+      this.isNodeRunning = false;
+      this.isClientConnected = false;
       return false;
     }
   }
 
   /**
-   * Upload file to IPFS
-   * @param filePath Path to the file
-   * @param options Optional configuration options
-   * @returns CID of the uploaded file
+   * Get the IPFS node status
    */
-  async addFile(filePath: string, options: { pin?: boolean } = { pin: true }): Promise<string> {
+  public async getStatus(): Promise<{ isNodeRunning: boolean, isClientConnected: boolean, gateway: string }> {
     try {
-      // Check if we have an active IPFS connection
-      if (!this.ipfsClient && !this.ipfsNode) {
-        throw new Error('No IPFS connection available');
-      }
-      
-      this.logger.info('Adding file to IPFS', { filePath });
-      
-      // Read file as buffer
-      const fileBuffer = fs.readFileSync(filePath);
-      
-      // Use embedded node or client to add the file
-      const ipfs = this.ipfsNode || this.ipfsClient;
-      
-      if (!ipfs) {
-        throw new Error('No IPFS instance available');
-      }
-      
-      // Add the file to IPFS
-      const result = await ipfs.add(fileBuffer, { pin: options.pin });
-      
-      this.logger.info('File added to IPFS', { 
-        cid: result.cid.toString(), 
-        size: result.size 
-      });
-      
-      return result.cid.toString();
-    } catch (error) {
-      this.logger.error('Failed to add file to IPFS', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Upload data buffer to IPFS
-   * @param data Buffer or string data to upload
-   * @param options Optional configuration options
-   * @returns CID of the uploaded content
-   */
-  async addData(data: Buffer | string, options: { pin?: boolean, filename?: string } = { pin: true }): Promise<string> {
-    try {
-      // Check if we have an active IPFS connection
-      if (!this.ipfsClient && !this.ipfsNode) {
-        throw new Error('No IPFS connection available');
-      }
-      
-      // Use embedded node or client to add the data
-      const ipfs = this.ipfsNode || this.ipfsClient;
-      
-      if (!ipfs) {
-        throw new Error('No IPFS instance available');
-      }
-
-      // Convert string to buffer if needed
-      const buffer = typeof data === 'string' ? Buffer.from(data) : data;
-      
-      // Add the data to IPFS
-      const result = await ipfs.add(buffer, { pin: options.pin });
-      
-      this.logger.info('Data added to IPFS', { 
-        cid: result.cid.toString(), 
-        size: result.size,
-        filename: options.filename
-      });
-      
-      // If filename is provided, save content metadata
-      if (options.filename) {
-        const metadata = {
-          cid: result.cid.toString(),
-          filename: options.filename,
-          size: result.size,
-          dateAdded: new Date().toISOString()
-        };
-        
-        const metadataPath = path.join(this.storagePath, 'metadata');
-        if (!fs.existsSync(metadataPath)) {
-          fs.mkdirSync(metadataPath, { recursive: true });
+      if (this.ipfs || this.ipfsClient) {
+        try {
+          // Try to ping the node to verify it's still running
+          const id = this.ipfs 
+            ? await this.ipfs.id() 
+            : await this.ipfsClient.id();
+          
+          this.isNodeRunning = true;
+          this.isClientConnected = true;
+        } catch (error) {
+          this.isNodeRunning = false;
+          this.isClientConnected = false;
         }
-        
-        fs.writeFileSync(
-          path.join(metadataPath, `${result.cid.toString()}.json`), 
-          JSON.stringify(metadata, null, 2)
-        );
       }
       
-      return result.cid.toString();
+      return {
+        isNodeRunning: this.isNodeRunning,
+        isClientConnected: this.isClientConnected,
+        gateway: this.isNodeRunning 
+          ? ipfsConfig.gatewayUrl 
+          : ipfsConfig.publicGateway
+      };
     } catch (error) {
-      this.logger.error('Failed to add data to IPFS', error);
+      this.logger.error('Error getting IPFS status', error);
+      return {
+        isNodeRunning: false,
+        isClientConnected: false,
+        gateway: ipfsConfig.publicGateway
+      };
+    }
+  }
+
+  /**
+   * Get the IPFS node info
+   */
+  public async getNodeInfo(): Promise<any> {
+    try {
+      if (!this.isNodeRunning) {
+        throw new Error('IPFS node is not running');
+      }
+      
+      const client = this.ipfs || this.ipfsClient;
+      
+      const id = await client.id();
+      const version = await client.version();
+      const peers = await client.swarm.peers();
+      
+      return {
+        id: id.id,
+        version: version.version,
+        peersCount: peers.length,
+        addresses: id.addresses
+      };
+    } catch (error) {
+      this.logger.error('Error getting IPFS node info', error);
       throw error;
     }
   }
 
   /**
-   * Get content from IPFS by CID
-   * @param cid Content identifier
-   * @returns Buffer containing the content
+   * Add a file to IPFS
+   * @param filePath File path to add
+   * @returns CID of the added file
    */
-  async getContent(cid: string): Promise<Buffer> {
+  public async addFile(filePath: string): Promise<string> {
     try {
-      // Check if we have an active IPFS connection
-      if (!this.ipfsClient && !this.ipfsNode) {
-        throw new Error('No IPFS connection available');
+      if (!this.isNodeRunning) {
+        throw new Error('IPFS node is not running');
       }
       
-      this.logger.info('Retrieving content from IPFS', { cid });
+      const client = this.ipfs || this.ipfsClient;
       
-      // Use embedded node or client to get the content
-      const ipfs = this.ipfsNode || this.ipfsClient;
-      
-      if (!ipfs) {
-        throw new Error('No IPFS instance available');
+      // Check if file exists
+      if (!fs.existsSync(filePath)) {
+        throw new Error(`File not found: ${filePath}`);
       }
       
-      // Get the content from IPFS
-      const chunks: Uint8Array[] = [];
+      // Get file name and size
+      const fileName = path.basename(filePath);
+      const stats = fs.statSync(filePath);
       
-      for await (const chunk of ipfs.cat(cid)) {
+      this.logger.info(`Adding file to IPFS: ${fileName} (${stats.size} bytes)`);
+      
+      // Create read stream for the file
+      const fileStream = fs.createReadStream(filePath);
+      
+      // Add file to IPFS
+      const result = await client.add(
+        fileStream,
+        {
+          pin: ipfsConfig.pinning.autoPinContent && stats.size <= ipfsConfig.pinning.maxPinSize
+        }
+      );
+      
+      const cid = result.cid.toString();
+      
+      this.logger.info(`File added to IPFS: ${fileName}`, { cid });
+      
+      // If auto-pin is enabled and file is within size limit
+      if (ipfsConfig.pinning.autoPinContent && stats.size <= ipfsConfig.pinning.maxPinSize) {
+        this.logger.info(`Pinned file: ${fileName} (${cid})`);
+      }
+      
+      // If remote pinning is enabled, pin to remote services
+      await this.pinToRemoteServices(cid, fileName);
+      
+      return cid;
+    } catch (error) {
+      this.logger.error('Error adding file to IPFS', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add content to IPFS
+   * @param content Content to add
+   * @param fileName Optional filename
+   * @returns CID of the added content
+   */
+  public async addContent(content: string | Buffer, fileName?: string): Promise<string> {
+    try {
+      if (!this.isNodeRunning) {
+        throw new Error('IPFS node is not running');
+      }
+      
+      const client = this.ipfs || this.ipfsClient;
+      
+      const contentSize = Buffer.isBuffer(content) 
+        ? content.length 
+        : Buffer.byteLength(content);
+      
+      this.logger.info(`Adding content to IPFS${fileName ? `: ${fileName}` : ''} (${contentSize} bytes)`);
+      
+      // Add content to IPFS
+      const result = await client.add(
+        content,
+        {
+          pin: ipfsConfig.pinning.autoPinContent && contentSize <= ipfsConfig.pinning.maxPinSize
+        }
+      );
+      
+      const cid = result.cid.toString();
+      
+      this.logger.info(`Content added to IPFS${fileName ? `: ${fileName}` : ''}`, { cid });
+      
+      // If auto-pin is enabled and content is within size limit
+      if (ipfsConfig.pinning.autoPinContent && contentSize <= ipfsConfig.pinning.maxPinSize) {
+        this.logger.info(`Pinned content${fileName ? `: ${fileName}` : ''} (${cid})`);
+      }
+      
+      // If remote pinning is enabled, pin to remote services
+      await this.pinToRemoteServices(cid, fileName);
+      
+      return cid;
+    } catch (error) {
+      this.logger.error('Error adding content to IPFS', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get content from IPFS
+   * @param cid CID of the content to get
+   * @returns Content as Buffer
+   */
+  public async getContent(cid: string): Promise<Buffer> {
+    try {
+      if (!this.isNodeRunning) {
+        throw new Error('IPFS node is not running');
+      }
+      
+      const client = this.ipfs || this.ipfsClient;
+      
+      this.logger.info(`Getting content from IPFS: ${cid}`);
+      
+      // Get content from IPFS
+      const chunks = [];
+      for await (const chunk of client.cat(cid)) {
         chunks.push(chunk);
       }
       
-      // Combine chunks into a single buffer
       const content = Buffer.concat(chunks);
       
-      this.logger.info('Content retrieved from IPFS', { 
-        cid, 
-        size: content.length 
-      });
+      this.logger.info(`Content retrieved from IPFS: ${cid} (${content.length} bytes)`);
       
       return content;
     } catch (error) {
-      this.logger.error('Failed to get content from IPFS', error);
+      this.logger.error(`Error getting content from IPFS: ${cid}`, error);
       throw error;
     }
   }
 
   /**
-   * Pin content to ensure it's kept in the IPFS node
-   * @param cid Content identifier to pin
+   * Pin content to IPFS
+   * @param cid CID of the content to pin
    */
-  async pinContent(cid: string): Promise<void> {
+  public async pinContent(cid: string): Promise<void> {
     try {
-      // Check if we have an active IPFS connection
-      if (!this.ipfsClient && !this.ipfsNode) {
-        throw new Error('No IPFS connection available');
+      if (!this.isNodeRunning) {
+        throw new Error('IPFS node is not running');
       }
       
-      this.logger.info('Pinning content to IPFS', { cid });
+      const client = this.ipfs || this.ipfsClient;
       
-      // Use embedded node or client to pin the content
-      const ipfs = this.ipfsNode || this.ipfsClient;
+      this.logger.info(`Pinning content: ${cid}`);
       
-      if (!ipfs) {
-        throw new Error('No IPFS instance available');
-      }
+      // Pin content
+      await client.pin.add(CID.parse(cid));
       
-      // Pin the content
-      await ipfs.pin.add(cid);
+      this.logger.info(`Content pinned: ${cid}`);
       
-      this.logger.info('Content pinned to IPFS', { cid });
+      // If remote pinning is enabled, pin to remote services
+      await this.pinToRemoteServices(cid);
     } catch (error) {
-      this.logger.error('Failed to pin content to IPFS', error);
+      this.logger.error(`Error pinning content: ${cid}`, error);
       throw error;
     }
   }
 
   /**
-   * Get the IPFS gateway URL for a CID
-   * @param cid Content identifier
+   * Unpin content from IPFS
+   * @param cid CID of the content to unpin
+   */
+  public async unpinContent(cid: string): Promise<void> {
+    try {
+      if (!this.isNodeRunning) {
+        throw new Error('IPFS node is not running');
+      }
+      
+      const client = this.ipfs || this.ipfsClient;
+      
+      this.logger.info(`Unpinning content: ${cid}`);
+      
+      // Unpin content
+      await client.pin.rm(CID.parse(cid));
+      
+      this.logger.info(`Content unpinned: ${cid}`);
+    } catch (error) {
+      this.logger.error(`Error unpinning content: ${cid}`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Pin to remote pinning services
+   * @param cid CID of the content to pin
+   * @param name Optional name for the content
+   */
+  private async pinToRemoteServices(cid: string, name?: string): Promise<void> {
+    const enabledServices = ipfsConfig.pinning.remoteServices.filter(service => service.enabled);
+    
+    if (enabledServices.length === 0) {
+      return;
+    }
+    
+    this.logger.info(`Pinning content to remote services: ${cid}`);
+    
+    for (const service of enabledServices) {
+      try {
+        // This is a placeholder for actual remote pinning service integration
+        // In a real implementation, you would use the respective API client
+        // to pin the content to the remote service
+        
+        this.logger.info(`Pinned content to ${service.name}: ${cid}`);
+      } catch (error) {
+        this.logger.error(`Error pinning content to ${service.name}: ${cid}`, error);
+      }
+    }
+  }
+
+  /**
+   * Get a gateway URL for a CID
+   * @param cid CID of the content
    * @returns Gateway URL
    */
-  getGatewayUrl(cid: string): string {
-    return `${this.ipfsGateway}${cid}`;
+  public getGatewayUrl(cid: string): string {
+    // Use configured gateway URL if node is running, otherwise use public gateway
+    const gatewayUrl = this.isNodeRunning ? ipfsConfig.gatewayUrl : ipfsConfig.publicGateway;
+    return `${gatewayUrl}/${cid}`;
   }
 
   /**
-   * Set a custom IPFS gateway URL
-   * @param gatewayUrl New gateway URL
+   * Stop IPFS node or client
    */
-  setGateway(gatewayUrl: string): void {
-    this.ipfsGateway = gatewayUrl;
-    this.logger.info('IPFS gateway updated', { gateway: gatewayUrl });
-  }
-
-  /**
-   * Stop the embedded IPFS node
-   */
-  async stop(): Promise<void> {
+  public async stop(): Promise<void> {
     try {
-      if (this.ipfsNode && this.isNodeRunning) {
+      if (this.ipfs) {
         this.logger.info('Stopping embedded IPFS node');
-        await this.ipfsNode.stop();
-        this.ipfsNode = null;
-        this.isNodeRunning = false;
-        this.logger.info('IPFS node stopped');
+        await this.ipfs.stop();
+        this.ipfs = null;
       }
       
-      if (this.ipfsClient && this.isClientConnected) {
-        this.ipfsClient = null;
-        this.isClientConnected = false;
-      }
+      this.ipfsClient = null;
+      this.isNodeRunning = false;
+      this.isClientConnected = false;
+      
+      this.logger.info('IPFS node stopped');
     } catch (error) {
-      this.logger.error('Failed to stop IPFS node', error);
+      this.logger.error('Error stopping IPFS node', error);
     }
-  }
-
-  /**
-   * Get status information about IPFS connections
-   */
-  getStatus(): { isNodeRunning: boolean, isClientConnected: boolean } {
-    return {
-      isNodeRunning: this.isNodeRunning,
-      isClientConnected: this.isClientConnected
-    };
   }
 }

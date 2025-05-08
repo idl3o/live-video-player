@@ -3,14 +3,15 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import NodeMediaServer from 'node-media-server';
+import { LoggerService } from './services/LoggerService';
+import { AuthService } from './services/AuthService';
 import { ChatService } from './services/ChatService';
+import { IPFSService } from './services/IPFSService';
+import { RecordingService } from './services/RecordingService';
+import authMiddleware from './middleware/authMiddleware';
+import authRoutes from './routes/authRoutes';
 import dotenv from 'dotenv';
 import { execSync } from 'child_process';
-import { authRoutes } from './routes/authRoutes';
-import { authenticate as authMiddleware } from './middleware/authMiddleware';
-import { AuthService } from './services/AuthService';
-import { IPFSService } from './services/IPFSService';
-import { LoggerService } from './services/LoggerService';
 
 // Load environment variables
 dotenv.config();
@@ -46,11 +47,22 @@ if (!fs.existsSync(recordingsPath)) {
   fs.mkdirSync(recordingsPath, { recursive: true });
 }
 
-// Initialize required services
-const logger = new LoggerService();
+// Initialize services
+const logger = new LoggerService('Server');
 const authService = new AuthService();
 const chatService = new ChatService(http);
 const ipfsService = new IPFSService(logger);
+const recordingService = new RecordingService(logger, ipfsService);
+
+// Initialize IPFS service
+(async () => {
+  try {
+    await ipfsService.initialize();
+    logger.info('IPFS service initialized');
+  } catch (err) {
+    logger.error('Failed to initialize IPFS service', err);
+  }
+})();
 
 // Configure Node-Media-Server for RTMP and HTTP-FLV with explicit host binding
 const nmsConfig = {
@@ -247,25 +259,6 @@ try {
   console.error(`[RTMP] Failed to start server: ${error}`);
 }
 
-// IPFS initialization
-// Initialize IPFS node - attempt connection to local Kubo node first, then fall back to embedded node if needed
-(async () => {
-  try {
-    // Try to connect to local Kubo IPFS node (from ipfs directory)
-    const connected = await ipfsService.connectToExternalNode('http://localhost:5001');
-    
-    if (!connected) {
-      // Fall back to embedded node if external connection fails
-      console.log('[IPFS] Could not connect to external IPFS node, starting embedded node');
-      await ipfsService.startEmbeddedNode();
-    }
-    
-    console.log('[IPFS] Service initialized successfully');
-  } catch (error) {
-    console.error('[IPFS] Failed to initialize IPFS service', error);
-  }
-})();
-
 // API Routes
 app.use('/api/auth', authRoutes);
 
@@ -302,19 +295,15 @@ app.get('/api/streams', (req, res) => {
   });
 });
 
-// IPFS API Routes
-app.get('/api/ipfs/status', (req, res) => {
+// IPFS API routes
+app.get('/api/ipfs/status', authMiddleware, (req, res) => {
   const status = ipfsService.getStatus();
   res.json({
     status: 'success',
-    data: {
-      ...status,
-      gateway: ipfsService.getGatewayUrl('')
-    }
+    data: status
   });
 });
 
-// Upload recording to IPFS
 app.post('/api/ipfs/upload', authMiddleware, async (req, res) => {
   try {
     const { recordingPath } = req.body;
@@ -348,7 +337,7 @@ app.post('/api/ipfs/upload', authMiddleware, async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('[IPFS] Upload error:', error);
+    logger.error('Error uploading to IPFS', error);
     res.status(500).json({
       status: 'error',
       message: 'Failed to upload to IPFS'
@@ -356,53 +345,21 @@ app.post('/api/ipfs/upload', authMiddleware, async (req, res) => {
   }
 });
 
-// Retrieve content from IPFS
 app.get('/api/ipfs/content/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
     
-    if (!cid) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'CID is required'
-      });
-    }
-    
     // Get content from IPFS
     const content = await ipfsService.getContent(cid);
     
-    // Determine content type from first few bytes or default to octet-stream
-    let contentType = 'application/octet-stream';
-    if (content.length > 4) {
-      const header = content.slice(0, 4).toString('hex');
-      if (header.startsWith('ffd8')) {
-        contentType = 'image/jpeg';
-      } else if (header === '89504e47') {
-        contentType = 'image/png';
-      } else if (header.startsWith('424d')) {
-        contentType = 'image/bmp';
-      } else if (header.startsWith('47494638')) {
-        contentType = 'image/gif';
-      } else if (header.startsWith('25504446')) {
-        contentType = 'application/pdf';
-      } else if (header.startsWith('504b0304')) {
-        contentType = 'application/zip';
-      } else if (content.slice(0, 15).toString().includes('<!DOCTYPE html')) {
-        contentType = 'text/html';
-      } else if (content.length > 32 && content.slice(4, 12).toString() === 'ftypmp4') {
-        contentType = 'video/mp4';
-      } else if (content.length > 32 && content.slice(4, 8).toString() === 'ftyp') {
-        contentType = 'video/mp4';
-      } else if (content.slice(0, 4).toString() === 'RIFF' && content.slice(8, 12).toString() === 'WAVE') {
-        contentType = 'audio/wav';
-      }
-    }
+    // Try to detect content type
+    const detectedType = await fileTypeFromBuffer(content);
+    const contentType = detectedType ? detectedType.mime : 'application/octet-stream';
     
     res.setHeader('Content-Type', contentType);
-    res.setHeader('Content-Length', content.length);
     res.send(content);
-  } catch (error) {
-    console.error('[IPFS] Content retrieval error:', error);
+  } catch (err) {
+    logger.error('Error retrieving content from IPFS', err);
     res.status(500).json({
       status: 'error',
       message: 'Failed to retrieve content from IPFS'
@@ -410,7 +367,6 @@ app.get('/api/ipfs/content/:cid', async (req, res) => {
   }
 });
 
-// Pin content to IPFS node
 app.post('/api/ipfs/pin', authMiddleware, async (req, res) => {
   try {
     const { cid } = req.body;
@@ -422,20 +378,101 @@ app.post('/api/ipfs/pin', authMiddleware, async (req, res) => {
       });
     }
     
-    // Pin content
     await ipfsService.pinContent(cid);
     
     res.json({
       status: 'success',
-      message: 'Content pinned successfully',
-      data: { cid }
+      message: 'Content pinned successfully'
     });
-  } catch (error) {
-    console.error('[IPFS] Pin error:', error);
+  } catch (err) {
+    logger.error('Error pinning content to IPFS', err);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to pin content'
+      message: 'Failed to pin content to IPFS'
     });
+  }
+});
+
+// Recording API routes
+app.get('/api/recordings', authMiddleware, (req, res) => {
+  const recordings = recordingService.getRecordings();
+  res.json({
+    status: 'success',
+    data: recordings
+  });
+});
+
+app.post('/api/recordings/:filename/ipfs', authMiddleware, async (req, res) => {
+  const { filename } = req.params;
+  
+  try {
+    const result = await recordingService.uploadToIPFS(filename);
+    
+    if (result.success) {
+      res.json({
+        status: 'success',
+        data: {
+          cid: result.cid,
+          url: result.url,
+          filename
+        }
+      });
+    } else {
+      res.status(400).json({
+        status: 'error',
+        message: result.error
+      });
+    }
+  } catch (error) {
+    logger.error('Recording upload error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to upload recording to IPFS'
+    });
+  }
+});
+
+app.delete('/api/recordings/:filename', authMiddleware, (req, res) => {
+  const { filename } = req.params;
+  
+  const result = recordingService.deleteRecording(filename);
+  
+  if (result.success) {
+    res.json({
+      status: 'success',
+      message: 'Recording deleted successfully'
+    });
+  } else {
+    res.status(400).json({
+      status: 'error',
+      message: result.error
+    });
+  }
+});
+
+// Configure automatic recording for streams
+nms.on('postPublish', (id, StreamPath, args) => {
+  console.log('[NodeEvent on postPublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  
+  // Configure recording for the stream
+  const recordingConfig = recordingService.configureRecording(StreamPath);
+  
+  if (recordingConfig.success && recordingConfig.recordingPath) {
+    // Here you would typically use the recording path to set up ffmpeg recording
+    logger.info(`Started recording for stream ${StreamPath} to ${recordingConfig.recordingPath}`);
+    
+    // For development purposes, we'll simulate a recording completion after 60 seconds
+    setTimeout(async () => {
+      // This is where you'd handle the actual recording completion
+      // In production, you'd tie this to the actual recording finish event
+      const result = await recordingService.handleRecordingComplete(recordingConfig.recordingPath!, true);
+      
+      if (result.success && result.ipfsData) {
+        logger.info(`Recording uploaded to IPFS: ${result.ipfsData.cid}`);
+      } else if (result.error) {
+        logger.error(`Recording error: ${result.error}`);
+      }
+    }, 60000); // 60 seconds simulation
   }
 });
 

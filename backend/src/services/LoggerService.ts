@@ -1,87 +1,84 @@
 import fs from 'fs';
 import path from 'path';
-import { format } from 'util';
 
-enum LogLevel {
-  DEBUG = 'DEBUG',
-  INFO = 'INFO',
-  WARN = 'WARN',
-  ERROR = 'ERROR',
-  FATAL = 'FATAL'
-}
+/**
+ * Service for handling logging across the application
+ */
+export class LoggerService {
+  private context: string;
 
-class LoggerService {
-  private logDir: string;
-  private logFile: string;
-  private debugEnabled: boolean;
-  
-  constructor() {
-    this.logDir = path.join(process.cwd(), 'logs');
-    this.logFile = path.join(this.logDir, `app-${new Date().toISOString().split('T')[0]}.log`);
-    this.debugEnabled = process.env.DEBUG?.toLowerCase() === 'true' || false;
-    
-    // Ensure log directory exists
-    if (!fs.existsSync(this.logDir)) {
-      fs.mkdirSync(this.logDir, { recursive: true });
+  /**
+   * Create a new logger instance
+   * @param context The context for the logger (usually the class or module name)
+   */
+  constructor(context: string) {
+    this.context = context;
+  }
+
+  /**
+   * Format a log message with the context
+   * @param message The message to log
+   * @returns The formatted message
+   */
+  private formatMessage(message: string): string {
+    return `[${this.context}] ${message}`;
+  }
+
+  /**
+   * Log an info message
+   * @param message The message to log
+   * @param meta Optional metadata to log
+   */
+  public info(message: string, meta?: any): void {
+    const formattedMessage = this.formatMessage(message);
+    if (meta) {
+      console.info(formattedMessage, meta);
+    } else {
+      console.info(formattedMessage);
     }
   }
-  
-  private formatMessage(level: LogLevel, message: string, meta?: any): string {
-    const timestamp = new Date().toISOString();
-    const formattedMeta = meta ? `\n${JSON.stringify(meta, null, 2)}` : '';
-    return `[${timestamp}] [${level}] ${message}${formattedMeta}`;
+
+  /**
+   * Log a warning message
+   * @param message The message to log
+   * @param meta Optional metadata to log
+   */
+  public warn(message: string, meta?: any): void {
+    const formattedMessage = this.formatMessage(message);
+    if (meta) {
+      console.warn(formattedMessage, meta);
+    } else {
+      console.warn(formattedMessage);
+    }
   }
-  
-  private logToFile(message: string): void {
-    fs.appendFileSync(this.logFile, `${message}\n`);
+
+  /**
+   * Log an error message
+   * @param message The message to log
+   * @param error Optional error to log
+   */
+  public error(message: string, error?: any): void {
+    const formattedMessage = this.formatMessage(message);
+    if (error) {
+      console.error(formattedMessage, error);
+    } else {
+      console.error(formattedMessage);
+    }
   }
-  
-  debug(message: string, meta?: any): void {
-    if (!this.debugEnabled) return;
-    const formattedMessage = this.formatMessage(LogLevel.DEBUG, message, meta);
-    console.debug(formattedMessage);
-    this.logToFile(formattedMessage);
-  }
-  
-  info(message: string, meta?: any): void {
-    const formattedMessage = this.formatMessage(LogLevel.INFO, message, meta);
-    console.info(formattedMessage);
-    this.logToFile(formattedMessage);
-  }
-  
-  warn(message: string, meta?: any): void {
-    const formattedMessage = this.formatMessage(LogLevel.WARN, message, meta);
-    console.warn(formattedMessage);
-    this.logToFile(formattedMessage);
-  }
-  
-  error(message: string, error?: Error, meta?: any): void {
-    const errorMeta = error ? {
-      ...meta,
-      errorMessage: error.message,
-      stack: error.stack,
-    } : meta;
-    const formattedMessage = this.formatMessage(LogLevel.ERROR, message, errorMeta);
-    console.error(formattedMessage);
-    this.logToFile(formattedMessage);
-  }
-  
-  fatal(message: string, error?: Error, meta?: any): void {
-    const errorMeta = error ? {
-      ...meta,
-      errorMessage: error.message,
-      stack: error.stack,
-    } : meta;
-    const formattedMessage = this.formatMessage(LogLevel.FATAL, message, errorMeta);
-    console.error(formattedMessage);
-    this.logToFile(formattedMessage);
-  }
-  
-  getLogPath(): string {
-    return this.logFile;
+
+  /**
+   * Log a debug message
+   * @param message The message to log
+   * @param meta Optional metadata to log
+   */
+  public debug(message: string, meta?: any): void {
+    if (process.env.DEBUG === 'true') {
+      const formattedMessage = this.formatMessage(message);
+      if (meta) {
+        console.debug(formattedMessage, meta);
+      } else {
+        console.debug(formattedMessage);
+      }
+    }
   }
 }
-
-// Export a singleton instance
-export const logger = new LoggerService();
-export default logger;
