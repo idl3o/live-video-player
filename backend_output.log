@@ -79,3 +79,235 @@ src/services/ChatService.ts(3,30): error TS2307: Cannot find module 'uuid' or it
   diagnosticCodes: [ 2307, 2307 ]
 }
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/services/AuthService.ts(5,26): error TS2305: Module '"../models/User"' has no exported member 'UserCredentials'.
+src/services/AuthService.ts(5,43): error TS2305: Module '"../models/User"' has no exported member 'UserSession'.
+src/services/AuthService.ts(35,7): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'User'.
+src/services/AuthService.ts(67,10): error TS2339: Property 'lastLogin' does not exist on type 'User'.
+src/services/AuthService.ts(68,20): error TS2339: Property 'id' does not exist on type 'User'.
+src/services/AuthService.ts(72,20): error TS2339: Property 'id' does not exist on type 'User'.
+src/services/AuthService.ts(76,29): error TS2339: Property 'allowedToStream' does not exist on type 'User'.
+src/services/AuthService.ts(137,24): error TS2339: Property 'allowedToStream' does not exist on type 'User'.
+src/services/AuthService.ts(153,38): error TS2339: Property 'allowedToStream' does not exist on type 'User'.
+
+    at createTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [
+    2305, 2305, 2353,
+    2339, 2339, 2339,
+    2339, 2339, 2339
+  ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/services/AuthService.ts(35,7): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'User'.
+src/services/AuthService.ts(68,20): error TS2339: Property 'id' does not exist on type 'User'.
+src/services/AuthService.ts(72,20): error TS2339: Property 'id' does not exist on type 'User'.
+
+    at createTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2353, 2339, 2339 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[RTMP] Starting RTMP server on port 45935...
+08/05/2025 07:06:27 53564 [INFO] Node Media Server v2.7.4
+08/05/2025 07:06:27 53564 [ERROR] Node Media Trans Server startup failed. ffmpeg:ffmpeg cannot be executed.
+[ChatService] Initialized
+08/05/2025 07:06:27 53564 [INFO] Node Media Rtmp Server started on port: 45935
+08/05/2025 07:06:27 53564 [INFO] Node Media Http Server started on port: 45000
+08/05/2025 07:06:27 53564 [INFO] Node Media WebSocket Server started on port: 45000
+[API] Server is running on port 45001
+Admin user created
+[RTMP] Server successfully started and verified listening on port 45935
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[RTMP] Starting RTMP server on port 45935...
+08/05/2025 07:09:04 52276 [INFO] Node Media Server v2.7.4
+08/05/2025 07:09:04 52276 [ERROR] Node Media Trans Server startup failed. ffmpeg:ffmpeg cannot be executed.
+[ChatService] Initialized
+08/05/2025 07:09:04 52276 [INFO] Node Media Rtmp Server started on port: 45935
+08/05/2025 07:09:04 52276 [INFO] Node Media Http Server started on port: 45000
+08/05/2025 07:09:04 52276 [INFO] Node Media WebSocket Server started on port: 45000
+[API] Server is running on port 45001
+Admin user created
+[RTMP] Server successfully started and verified listening on port 45935
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[RTMP] Starting RTMP server on port 45935...
+08/05/2025 07:27:06 65116 [INFO] Node Media Server v2.7.4
+08/05/2025 07:27:06 65116 [ERROR] Node Media Trans Server startup failed. ffmpeg:ffmpeg cannot be executed.
+[ChatService] Initialized
+08/05/2025 07:27:06 65116 [INFO] Node Media Rtmp Server started on port: 45935
+08/05/2025 07:27:06 65116 [INFO] Node Media Http Server started on port: 45000
+08/05/2025 07:27:06 65116 [INFO] Node Media WebSocket Server started on port: 45000
+[API] Server is running on port 45001
+Admin user created
+[RTMP] Server successfully started and verified listening on port 45935
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[RTMP] Starting RTMP server on port 45935...
+08/05/2025 07:27:11 65700 [INFO] Node Media Server v2.7.4
+08/05/2025 07:27:11 65700 [ERROR] Node Media Trans Server startup failed. ffmpeg:ffmpeg cannot be executed.
+[ChatService] Initialized
+08/05/2025 07:27:11 65700 [INFO] Node Media Rtmp Server started on port: 45935
+08/05/2025 07:27:11 65700 [INFO] Node Media Http Server started on port: 45000
+08/05/2025 07:27:11 65700 [INFO] Node Media WebSocket Server started on port: 45000
+[API] Server is running on port 45001
+Admin user created
+[RTMP] Server successfully started and verified listening on port 45935
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[RTMP] Starting RTMP server on port 45935...
+08/05/2025 07:32:13 61872 [INFO] Node Media Server v2.7.4
+08/05/2025 07:32:13 61872 [ERROR] Node Media Trans Server startup failed. ffmpeg:ffmpeg cannot be executed.
+[ChatService] Initialized
+08/05/2025 07:32:13 61872 [ERROR] Node Media Rtmp Server Error: listen EADDRINUSE: address already in use :::45935
+08/05/2025 07:32:13 61872 [ERROR] Node Media Http Server Error: listen EADDRINUSE: address already in use :::45000
+08/05/2025 07:32:13 61872 [ERROR] Node Media WebSocket Server Error: listen EADDRINUSE: address already in use :::45000
+[Critical Error] Error: listen EADDRINUSE: address already in use :::45001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Object.<anonymous> (C:\Users\Sam\Documents\GitHub\live-video-player\backend\src\server.ts:285:6)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 45001
+}
+[Port Conflict] Port 45001 is already in use. Please close any applications using this port.
+08/05/2025 07:32:13 61872 [ERROR] uncaughtException Error: listen EADDRINUSE: address already in use :::45001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Object.<anonymous> (C:\Users\Sam\Documents\GitHub\live-video-player\backend\src\server.ts:285:6)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 45001
+}
+Admin user created
+[RTMP] Server successfully started and verified listening on port 45935
+[32m[nodemon] clean exit - waiting for changes before restart[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[RTMP] Starting RTMP server on port 45935...
+08/05/2025 07:44:52 45220 [INFO] Node Media Server v2.7.4
+08/05/2025 07:44:52 45220 [ERROR] Node Media Trans Server startup failed. ffmpeg:ffmpeg cannot be executed.
+[ChatService] Initialized
+08/05/2025 07:44:52 45220 [ERROR] Node Media Rtmp Server Error: listen EADDRINUSE: address already in use :::45935
+08/05/2025 07:44:52 45220 [INFO] Node Media Http Server started on port: 45000
+08/05/2025 07:44:52 45220 [INFO] Node Media WebSocket Server started on port: 45000
+[API] Server is running on port 45001
+Admin user created
+[RTMP] Server successfully started and verified listening on port 45935
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[RTMP] Starting RTMP server on port 45935...
+08/05/2025 07:47:48 71240 [INFO] Node Media Server v2.7.4
+08/05/2025 07:47:48 71240 [ERROR] Node Media Trans Server startup failed. ffmpeg:ffmpeg cannot be executed.
+[ChatService] Initialized
+08/05/2025 07:47:48 71240 [INFO] Node Media Rtmp Server started on port: 45935
+08/05/2025 07:47:48 71240 [INFO] Node Media Http Server started on port: 45000
+08/05/2025 07:47:48 71240 [INFO] Node Media WebSocket Server started on port: 45000
+[API] Server is running on port 45001
+Admin user created
+[RTMP] Server successfully started and verified listening on port 45935
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/server.ts(13,10): error TS2614: Module '"./services/LoggerService"' has no exported member 'LoggerService'. Did you mean to use 'import LoggerService from "./services/LoggerService"' instead?
+
+    at createTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2614 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/server.ts(13,10): error TS2614: Module '"./services/LoggerService"' has no exported member 'LoggerService'. Did you mean to use 'import LoggerService from "./services/LoggerService"' instead?
+
+    at createTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1706:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Sam\Documents\GitHub\live-video-player\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2614 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

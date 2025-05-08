@@ -3,12 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.authRoutes = void 0;
 // File: authRoutes.ts
 const express_1 = __importDefault(require("express"));
 const authMiddleware_1 = require("../middleware/authMiddleware");
 const authMiddleware_2 = require("../middleware/authMiddleware");
 const User_1 = require("../models/User");
 const router = express_1.default.Router();
+exports.authRoutes = router;
 // Create admin user on startup
 authMiddleware_1.authService.createAdminIfNotExists().catch(err => {
     console.error('Failed to create admin user:', err);
@@ -129,4 +131,3 @@ router.post('/create-streamer', authMiddleware_2.authenticate, (0, authMiddlewar
         return res.status(500).json({ error: 'Failed to create streamer' });
     }
 });
-exports.default = router;

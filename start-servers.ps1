@@ -1,6 +1,11 @@
 # PowerShell Script to launch both backend and frontend servers
 # Enhanced version with better port checking, error handling, process management, and firewall configuration
 
+# Add parameter to force start even if lock file exists
+param(
+    [switch]$Force = $false
+)
+
 # Create a unique identifier for this script run to avoid recursion
 $scriptRunId = [guid]::NewGuid().ToString()
 $logFile = Join-Path $PSScriptRoot "ps-server-launcher.log"
@@ -19,11 +24,19 @@ function Write-Log {
 # Check if we're in a recursive call
 if (Test-Path -Path "$env:TEMP\live-video-player-running.lock") {
     $runningId = Get-Content -Path "$env:TEMP\live-video-player-running.lock"
-    Write-Log "ERROR: Another instance of the script appears to be running (ID: $runningId). Exiting to prevent recursion."
-    Write-Host "ERROR: Another instance is already running. Please wait for it to exit or terminate the process." -ForegroundColor Red
-    Write-Host "Press any key to exit..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    exit 1
+    
+    if ($Force) {
+        Write-Log "WARNING: Found existing lock file (ID: $runningId), but -Force was specified. Removing lock file and continuing."
+        Write-Host "WARNING: Found existing lock file. Forcing start with new instance." -ForegroundColor Yellow
+        Remove-Item -Path "$env:TEMP\live-video-player-running.lock" -Force
+    } else {
+        Write-Log "ERROR: Another instance of the script appears to be running (ID: $runningId). Exiting to prevent recursion."
+        Write-Host "ERROR: Another instance is already running. Please wait for it to exit or terminate the process." -ForegroundColor Red
+        Write-Host "TIP: Run the script with -Force parameter to override: powershell -ExecutionPolicy Bypass -File ./start-servers.ps1 -Force" -ForegroundColor Cyan
+        Write-Host "Press any key to exit..."
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        exit 1
+    }
 }
 
 # Create lock file with our run ID
@@ -61,18 +74,18 @@ try {
                 Write-Log "Found connections on port $port"
                 $connections | ForEach-Object {
                     $line = $_ -replace '.*LISTENING\s+', ''
-                    $pid = $line.Trim()
+                    $processId = $line.Trim()  # Changed variable name from $pid to $processId
                     try {
-                        $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
+                        $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
                         if ($process) {
-                            Write-Host "Terminating process using port $port - PID: $pid, Name: $($process.ProcessName)" -ForegroundColor Red
-                            Write-Log "Terminating process - PID: $pid, Name: $($process.ProcessName)"
-                            Stop-Process -Id $pid -Force
+                            Write-Host "Terminating process using port $port - PID: $processId, Name: $($process.ProcessName)" -ForegroundColor Red
+                            Write-Log "Terminating process - PID: $processId, Name: $($process.ProcessName)"
+                            Stop-Process -Id $processId -Force
                             Start-Sleep -Seconds 1
                         }
                     } catch {
-                        Write-Host "Error accessing process with PID $pid - $_" -ForegroundColor DarkRed
-                        Write-Log "Error accessing process with PID $pid - $_"
+                        Write-Host "Error accessing process with PID $processId - $_" -ForegroundColor DarkRed
+                        Write-Log "Error accessing process with PID $processId - $_"
                     }
                 }
             } else {
@@ -108,8 +121,24 @@ try {
     # Clear ports first
     Clear-PortProcesses -Ports @($API_PORT, $RTMP_PORT, $HTTP_PORT, $FRONTEND_PORT)
     
-    # Configure firewall for required ports
-    Write-Host "`n[SECURITY] Checking firewall rules..." -ForegroundColor Cyan
+    # Build TypeScript files before starting the server (added step)
+    Write-Host "`n[BUILDING] Compiling TypeScript for backend..." -ForegroundColor Cyan
+    Write-Log "Compiling TypeScript files"
+    
+    # Move to backend directory and build first
+    Push-Location $BACKEND_PATH
+    $buildProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm run build" -PassThru -Wait -NoNewWindow
+    
+    if ($buildProcess.ExitCode -ne 0) {
+        Write-Host "Error compiling TypeScript files. Check for errors." -ForegroundColor Red
+        Write-Log "Failed to compile TypeScript files"
+        Pop-Location
+        throw "TypeScript compilation failed"
+    } else {
+        Write-Host "[SUCCESS] TypeScript compiled successfully" -ForegroundColor Green
+        Write-Log "TypeScript files compiled successfully"
+    }
+    Pop-Location
     
     # Start backend server first
     Write-Host "`n[STARTING] Launching Backend Server (RTMP: $RTMP_PORT, HTTP: $HTTP_PORT, API: $API_PORT)" -ForegroundColor DarkCyan
@@ -120,8 +149,9 @@ try {
     # Move to backend directory and start the server
     Push-Location $BACKEND_PATH
     
-    # Start backend server in new window with its output redirected
-    $backendProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm run dev > $backendLogFile 2>&1" -PassThru -WindowStyle Minimized
+    # Start backend server in new window with its output redirected - using Start-Process correctly
+    # Changed from 'npm run dev' to 'npm start' to use the compiled JS version
+    $backendProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm start > `"$backendLogFile`" 2>&1" -PassThru -WindowStyle Minimized
     $backendPid = $backendProcess.Id
     Write-Log "Started backend process with PID: $backendPid"
     
@@ -167,7 +197,7 @@ try {
     Push-Location $FRONTEND_PATH
     
     # Start frontend server in new window with its output redirected
-    $frontendProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm start > $frontendLogFile 2>&1" -PassThru -WindowStyle Minimized
+    $frontendProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm start > `"$frontendLogFile`" 2>&1" -PassThru -WindowStyle Minimized
     $frontendPid = $frontendProcess.Id
     Write-Log "Started frontend process with PID: $frontendPid"
     
@@ -194,7 +224,7 @@ try {
     Write-Host "  - Check backend_output.log and frontend_output.log for errors" -ForegroundColor Gray
     Write-Host "  - Try running this script as Administrator for proper access" -ForegroundColor Gray
     Write-Host "  - Check if antivirus software is blocking the connections" -ForegroundColor Gray
-    Write-Host "  - Visit http://localhost:$API_PORT/api/test-rtmp in your browser to test RTMP connectivity" -ForegroundColor Gray
+    Write-Host "  - Visit http://localhost:$API_PORT/api/streams in your browser to test RTMP connectivity" -ForegroundColor Gray
     
     Write-Host "`n[INFO] Press Ctrl+C to stop all servers`n" -ForegroundColor Yellow
     Write-Log "All services started, waiting for user input to stop"

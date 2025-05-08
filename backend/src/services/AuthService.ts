@@ -27,22 +27,21 @@ export class AuthService {
       return null;
     }
 
-    const id = randomBytes(16).toString('hex');
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     const streamKey = role === UserRole.STREAMER ? this.generateStreamKey() : undefined;
     
-    const user: User = {
-      id,
+    const user = new User({
       username,
       email,
       passwordHash,
       role,
       streamKey,
       allowedToStream: role === UserRole.STREAMER || role === UserRole.ADMIN,
-      created: new Date()
-    };
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
 
-    users.set(id, user);
+    users.set(user.userId, user);
     return user;
   }
 
@@ -65,11 +64,11 @@ export class AuthService {
 
     // Update last login
     user.lastLogin = new Date();
-    users.set(user.id, user);
+    users.set(user.userId, user);
 
     // Create session payload for JWT
     const sessionData: UserSession = {
-      userId: user.id,
+      userId: user.userId,
       username: user.username,
       role: user.role,
       streamKey: user.streamKey,
@@ -110,8 +109,8 @@ export class AuthService {
   /**
    * Get user by ID
    */
-  getUserById(id: string): User | undefined {
-    return users.get(id);
+  getUserById(userId: string): User | undefined {
+    return users.get(userId);
   }
 
   /**

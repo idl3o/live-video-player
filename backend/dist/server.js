@@ -228,7 +228,7 @@ const chatService = new ChatService_1.ChatService(http);
 // API Routes
 app.use('/api/auth', authRoutes_1.authRoutes);
 // Protect API routes that need authentication
-app.use('/api/streams', authMiddleware_1.authMiddleware, (req, res, next) => {
+app.use('/api/streams', authMiddleware_1.authenticate, (req, res, next) => {
     // Your protected stream routes
     next();
 });

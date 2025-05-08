@@ -1,10 +1,11 @@
-{
+﻿{
   "name": "live-video-player",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "powershell -ExecutionPolicy Bypass -File ./start-servers.ps1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:env": "powershell -ExecutionPolicy Bypass -File ./start-test-env.ps1"
   },
   "keywords": [],
   "author": "",

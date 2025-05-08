@@ -9,6 +9,8 @@ import { execSync } from 'child_process';
 import { authRoutes } from './routes/authRoutes';
 import { authenticate as authMiddleware } from './middleware/authMiddleware';
 import { AuthService } from './services/AuthService';
+import { IPFSService } from './services/IPFSService';
+import { LoggerService } from './services/LoggerService';
 
 // Load environment variables
 dotenv.config();
@@ -44,8 +46,11 @@ if (!fs.existsSync(recordingsPath)) {
   fs.mkdirSync(recordingsPath, { recursive: true });
 }
 
-// Initialize AuthService
+// Initialize required services
+const logger = new LoggerService();
 const authService = new AuthService();
+const chatService = new ChatService(http);
+const ipfsService = new IPFSService(logger);
 
 // Configure Node-Media-Server for RTMP and HTTP-FLV with explicit host binding
 const nmsConfig = {
@@ -242,8 +247,24 @@ try {
   console.error(`[RTMP] Failed to start server: ${error}`);
 }
 
-// Initialize ChatService
-const chatService = new ChatService(http);
+// IPFS initialization
+// Initialize IPFS node - attempt connection to local Kubo node first, then fall back to embedded node if needed
+(async () => {
+  try {
+    // Try to connect to local Kubo IPFS node (from ipfs directory)
+    const connected = await ipfsService.connectToExternalNode('http://localhost:5001');
+    
+    if (!connected) {
+      // Fall back to embedded node if external connection fails
+      console.log('[IPFS] Could not connect to external IPFS node, starting embedded node');
+      await ipfsService.startEmbeddedNode();
+    }
+    
+    console.log('[IPFS] Service initialized successfully');
+  } catch (error) {
+    console.error('[IPFS] Failed to initialize IPFS service', error);
+  }
+})();
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -278,6 +299,157 @@ app.get('/api/streams', (req, res) => {
   res.json({
     success: true,
     streams: streamData
+  });
+});
+
+// IPFS API Routes
+app.get('/api/ipfs/status', (req, res) => {
+  const status = ipfsService.getStatus();
+  res.json({
+    status: 'success',
+    data: {
+      ...status,
+      gateway: ipfsService.getGatewayUrl('')
+    }
+  });
+});
+
+// Upload recording to IPFS
+app.post('/api/ipfs/upload', authMiddleware, async (req, res) => {
+  try {
+    const { recordingPath } = req.body;
+    
+    if (!recordingPath) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Recording path is required'
+      });
+    }
+    
+    const fullPath = path.join(__dirname, '..', 'media', 'recordings', recordingPath);
+    
+    if (!fs.existsSync(fullPath)) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Recording not found'
+      });
+    }
+    
+    // Add file to IPFS
+    const cid = await ipfsService.addFile(fullPath);
+    
+    // Return CID and gateway URL
+    res.json({
+      status: 'success',
+      data: {
+        cid,
+        url: ipfsService.getGatewayUrl(cid),
+        filename: path.basename(recordingPath)
+      }
+    });
+  } catch (error) {
+    console.error('[IPFS] Upload error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to upload to IPFS'
+    });
+  }
+});
+
+// Retrieve content from IPFS
+app.get('/api/ipfs/content/:cid', async (req, res) => {
+  try {
+    const { cid } = req.params;
+    
+    if (!cid) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'CID is required'
+      });
+    }
+    
+    // Get content from IPFS
+    const content = await ipfsService.getContent(cid);
+    
+    // Determine content type from first few bytes or default to octet-stream
+    let contentType = 'application/octet-stream';
+    if (content.length > 4) {
+      const header = content.slice(0, 4).toString('hex');
+      if (header.startsWith('ffd8')) {
+        contentType = 'image/jpeg';
+      } else if (header === '89504e47') {
+        contentType = 'image/png';
+      } else if (header.startsWith('424d')) {
+        contentType = 'image/bmp';
+      } else if (header.startsWith('47494638')) {
+        contentType = 'image/gif';
+      } else if (header.startsWith('25504446')) {
+        contentType = 'application/pdf';
+      } else if (header.startsWith('504b0304')) {
+        contentType = 'application/zip';
+      } else if (content.slice(0, 15).toString().includes('<!DOCTYPE html')) {
+        contentType = 'text/html';
+      } else if (content.length > 32 && content.slice(4, 12).toString() === 'ftypmp4') {
+        contentType = 'video/mp4';
+      } else if (content.length > 32 && content.slice(4, 8).toString() === 'ftyp') {
+        contentType = 'video/mp4';
+      } else if (content.slice(0, 4).toString() === 'RIFF' && content.slice(8, 12).toString() === 'WAVE') {
+        contentType = 'audio/wav';
+      }
+    }
+    
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Length', content.length);
+    res.send(content);
+  } catch (error) {
+    console.error('[IPFS] Content retrieval error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to retrieve content from IPFS'
+    });
+  }
+});
+
+// Pin content to IPFS node
+app.post('/api/ipfs/pin', authMiddleware, async (req, res) => {
+  try {
+    const { cid } = req.body;
+    
+    if (!cid) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'CID is required'
+      });
+    }
+    
+    // Pin content
+    await ipfsService.pinContent(cid);
+    
+    res.json({
+      status: 'success',
+      message: 'Content pinned successfully',
+      data: { cid }
+    });
+  } catch (error) {
+    console.error('[IPFS] Pin error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to pin content'
+    });
+  }
+});
+
+// Graceful shutdown to properly close IPFS node
+process.on('SIGINT', async () => {
+  console.log('Received SIGINT, shutting down gracefully');
+  
+  // Stop IPFS node
+  await ipfsService.stop();
+  
+  // Close HTTP server
+  http.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
   });
 });
 

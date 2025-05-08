@@ -21,6 +21,8 @@ class User {
         this.passwordHash = data.passwordHash || '';
         this.streamKey = data.streamKey || (data.role === UserRole.STREAMER || data.role === UserRole.ADMIN ? this.generateStreamKey() : undefined);
         this.role = data.role || UserRole.VIEWER;
+        this.allowedToStream = data.allowedToStream || (data.role === UserRole.STREAMER || data.role === UserRole.ADMIN);
+        this.lastLogin = data.lastLogin;
         this.createdAt = data.createdAt || new Date();
         this.updatedAt = data.updatedAt || new Date();
     }
@@ -56,6 +58,8 @@ class User {
             email: this.email,
             role: this.role,
             streamKey: this.streamKey,
+            allowedToStream: this.allowedToStream,
+            lastLogin: this.lastLogin,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
         };

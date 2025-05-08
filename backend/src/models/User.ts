@@ -8,6 +8,20 @@ export enum UserRole {
   ADMIN = 'admin'
 }
 
+export interface UserCredentials {
+  username: string;
+  password: string;
+}
+
+export interface UserSession {
+  userId: string;
+  username: string;
+  role: UserRole;
+  streamKey?: string;
+  allowedToStream: boolean;
+  exp: number;
+}
+
 export interface UserData {
   userId: string;
   username: string;
@@ -15,6 +29,8 @@ export interface UserData {
   passwordHash: string;
   streamKey?: string;
   role: UserRole;
+  allowedToStream?: boolean;
+  lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +42,8 @@ export class User implements UserData {
   passwordHash: string;
   streamKey?: string;
   role: UserRole;
+  allowedToStream: boolean;
+  lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;
 
@@ -36,6 +54,8 @@ export class User implements UserData {
     this.passwordHash = data.passwordHash || '';
     this.streamKey = data.streamKey || (data.role === UserRole.STREAMER || data.role === UserRole.ADMIN ? this.generateStreamKey() : undefined);
     this.role = data.role || UserRole.VIEWER;
+    this.allowedToStream = data.allowedToStream || (data.role === UserRole.STREAMER || data.role === UserRole.ADMIN);
+    this.lastLogin = data.lastLogin;
     this.createdAt = data.createdAt || new Date();
     this.updatedAt = data.updatedAt || new Date();
   }
@@ -77,6 +97,8 @@ export class User implements UserData {
       email: this.email,
       role: this.role,
       streamKey: this.streamKey,
+      allowedToStream: this.allowedToStream,
+      lastLogin: this.lastLogin,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };

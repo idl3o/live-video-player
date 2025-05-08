@@ -26,20 +26,19 @@ class AuthService {
         if (existingUser) {
             return null;
         }
-        const id = (0, crypto_1.randomBytes)(16).toString('hex');
         const passwordHash = await bcrypt_1.default.hash(password, SALT_ROUNDS);
         const streamKey = role === User_1.UserRole.STREAMER ? this.generateStreamKey() : undefined;
-        const user = {
-            id,
+        const user = new User_1.User({
             username,
             email,
             passwordHash,
             role,
             streamKey,
             allowedToStream: role === User_1.UserRole.STREAMER || role === User_1.UserRole.ADMIN,
-            created: new Date()
-        };
-        users.set(id, user);
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+        users.set(user.userId, user);
         return user;
     }
     /**
@@ -56,10 +55,10 @@ class AuthService {
         }
         // Update last login
         user.lastLogin = new Date();
-        users.set(user.id, user);
+        users.set(user.userId, user);
         // Create session payload for JWT
         const sessionData = {
-            userId: user.id,
+            userId: user.userId,
             username: user.username,
             role: user.role,
             streamKey: user.streamKey,
@@ -83,10 +82,23 @@ class AuthService {
         }
     }
     /**
+     * Verify a stream token (used for RTMP authentication)
+     */
+    verifyStreamToken(token) {
+        try {
+            const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+            return decoded && decoded.allowedToStream ? true : false;
+        }
+        catch (error) {
+            console.error('Stream token verification failed:', error);
+            return false;
+        }
+    }
+    /**
      * Get user by ID
      */
-    getUserById(id) {
-        return users.get(id);
+    getUserById(userId) {
+        return users.get(userId);
     }
     /**
      * Get user by stream key
