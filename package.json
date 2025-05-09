@@ -1,11 +1,12 @@
-﻿{
+{
   "name": "live-video-player",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "powershell -ExecutionPolicy Bypass -File ./start-servers.ps1",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:env": "powershell -ExecutionPolicy Bypass -File ./start-test-env.ps1"
+    "test:env": "powershell -ExecutionPolicy Bypass -File ./start-test-env.ps1",
+    "fullstack": "powershell -ExecutionPolicy Bypass -File ./setup-fullstack.ps1 && powershell -ExecutionPolicy Bypass -File ./start-fullstack.ps1"
   },
   "keywords": [],
   "author": "",
@@ -13,8 +14,8 @@
   "description": "",
   "dependencies": {
     "@types/socket.io-client": "^1.4.36",
-    "ipfs-core": "^0.18.1",
-    "ipfs-http-client": "^60.0.1",
+    "ipfs-core": "^0.17.0",
+    "ipfs-http-client": "^59.0.0",
     "socket.io-client": "^4.8.1"
   }
 }

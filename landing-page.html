@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Live Video Player - A Decentralized Open-Source Streaming Solution">
+    <title>Live Video Player - Decentralized Streaming</title>    <link rel="icon" href="/frontend/public/favicon.ico">
+    <style>
+        :root {
+            --primary: #4b6cb7;
+            --secondary: #182848;
+            --accent: #5c8eff;
+            --text: #f5f5f5;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(120deg, var(--secondary), var(--dark-bg));
+            min-height: 100vh;
+        }
+        
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+        
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            position: relative;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 60px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--accent), #a683ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #d0d0d0;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+        
+        .section-header p {
+            color: #b0b0b0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+        
+        .feature-card p {
+            color: #b0b0b0;
+        }
+        
+        /* Why Section */
+        .why-section {
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .why-card {
+            padding: 20px;
+            border-left: 4px solid var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        .why-card h3 {
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .why-card p {
+            color: #b0b0b0;
+        }
+          /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/frontend/public/logo512.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        
+        .cta-section p {
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            color: #d0d0d0;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            color: var(--text);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #b0b0b0;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 10px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #b0b0b0;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin-top: 20px;
+            }
+            
+            .nav-links li {
+                margin: 0 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animated {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+        
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 0;
+            stroke: currentColor;
+            fill: currentColor;
+            vertical-align: middle;
+        }
+    </style>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <img src="/frontend/public/logo192.png" alt="Live Video Player Logo">
+                    <h2>Live Video Player</h2>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#why">Why Decentralize</a></li>
+                    <li><a href="#start">Quick Start</a></li>
+                    <li>                <a href="/app" class="btn">Launch App</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="animated">A Decentralized Open-Source Streaming Solution</h1>
+            <p class="animated delay-1">Own your content. Stream freely. Build community.</p>
+            <div class="animated delay-2">            <a href="/app" class="btn">Start Streaming</a>
+            <a href="https://github.com/idl3o/live-video-player" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Powerful Features</h2>
+                <p>Everything you need for professional streaming without platform restrictions</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3>OBS Integration</h3>
+                    <p>Stream directly from OBS Studio to your own server with simple configuration</p>
+                </div>
+                <div class="feature-card animated delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Low-Latency Streaming</h3>
+                    <p>Optimized for real-time interaction using RTMP and HTTP-FLV protocols</p>
+                </div>
+                <div class="feature-card animated delay-2">
+                    <div class="feature-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3>Audio Visualization</h3>
+                    <p>See live audio levels with responsive visualizer for a better viewing experience</p>
+                </div>
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3>Stream Discovery</h3>
+                    <p>Browse active streams on your network with easy navigation</p>
+                </div>
+                <div class="feature-card animated delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3>Screen Sharing</h3>
+                    <p>Share your screen directly within the platform for seamless presentations</p>
+                </div>
+                <div class="feature-card animated delay-2">
+                    <div class="feature-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3>Federation-Ready</h3>
+                    <p>Architecture designed to connect with other instances (coming soon)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="why" class="why-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Decentralization Matters</h2>
+                <p>Take control of your content and community</p>
+            </div>
+            <div class="why-grid">
+                <div class="why-card">
+                    <h3>Content Freedom</h3>
+                    <p>No algorithmic suppression or unpredictable moderation policies</p>
+                </div>
+                <div class="why-card">
+                    <h3>Revenue Control</h3>
+                    <p>Keep 100% of your earnings without platform commissions</p>
+                </div>
+                <div class="why-card">
+                    <h3>Data Ownership</h3>
+                    <p>Your community's data stays with you, not on corporate servers</p>
+                </div>
+                <div class="why-card">
+                    <h3>Resilience</h3>
+                    <p>No single point of failure that can take down all streams</p>
+                </div>
+                <div class="why-card">
+                    <h3>Customization</h3>
+                    <p>Tailor the platform to your specific needs and branding</p>
+                </div>
+                <div class="why-card">
+                    <h3>True Ownership</h3>
+                    <p>Blockchain integration ensures your content remains yours (coming soon)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="start" class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Self-Host in Minutes</h2>
+                <p>Get your own streaming platform up and running quickly</p>
+                <div>
+                    <a href="/app" class="btn">Launch Application</a>
+                    <a href="https://github.com/idl3o/live-video-player/blob/main/docs/installation.md" class="btn btn-secondary">Installation Guide</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Live Video Player</h3>
+                    <p>A Decentralized Open-Source Streaming Solution</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Community Forum</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Project</h3>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Roadmap</a></li>
+                        <li><a href="#">Contributing</a></li>
+                        <li><a href="#">License</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Code of Conduct</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Live Video Player. Open source under MIT License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple animation for elements when they come into view
+            const animatedElements = document.querySelectorAll('.animated');
+            
+            function checkIfInView() {
+                const windowHeight = window.innerHeight;
+                const windowTopPosition = window.scrollY;
+                const windowBottomPosition = windowTopPosition + windowHeight;
+                
+                animatedElements.forEach(function(element) {
+                    const elementHeight = element.offsetHeight;
+                    const elementTopPosition = element.offsetTop;
+                    const elementBottomPosition = elementTopPosition + elementHeight;
+                    
+                    // Check if element is in viewport
+                    if (
+                        (elementBottomPosition >= windowTopPosition) &&
+                        (elementTopPosition <= windowBottomPosition)
+                    ) {
+                        element.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Run on first load
+            checkIfInView();
+            
+            // Listen for scroll events
+            window.addEventListener('scroll', checkIfInView);
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

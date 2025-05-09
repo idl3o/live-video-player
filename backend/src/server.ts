@@ -12,6 +12,7 @@ import authMiddleware from './middleware/authMiddleware';
 import authRoutes from './routes/authRoutes';
 import dotenv from 'dotenv';
 import { execSync } from 'child_process';
+import { fileTypeFromBuffer } from 'file-type';
 
 // Load environment variables
 dotenv.config();
@@ -99,6 +100,22 @@ const nmsConfig = {
   },
   logType: 4 // Add more verbose logging for node-media-server
 };
+
+// Serve static files from the project root
+const projectRoot = path.join(__dirname, '../../');
+app.use(express.static(projectRoot));
+
+// Serve landing page as the entry point
+app.get('/', (req, res) => {
+  logger.info('Serving landing page');
+  res.sendFile(path.join(projectRoot, 'landing-page.html'));
+});
+
+// Handle /app route to redirect to the React frontend
+app.get('/app', (req, res) => {
+  logger.info('Redirecting to React frontend app');
+  res.redirect('http://localhost:3000');
+});
 
 // Initialize Node-Media-Server with error handling
 const nms = new NodeMediaServer(nmsConfig);
