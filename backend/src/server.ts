@@ -8,8 +8,8 @@ import { AuthService } from './services/AuthService';
 import { ChatService } from './services/ChatService';
 import { IPFSService } from './services/IPFSService';
 import { RecordingService } from './services/RecordingService';
-import authMiddleware from './middleware/authMiddleware';
-import authRoutes from './routes/authRoutes';
+import { authenticate } from './middleware/authMiddleware'; // Changed this line
+import { authRoutes } from './routes/authRoutes';
 import dotenv from 'dotenv';
 import { execSync } from 'child_process';
 import { fileTypeFromBuffer } from 'file-type';
@@ -279,10 +279,98 @@ try {
 // API Routes
 app.use('/api/auth', authRoutes);
 
-// Protect API routes that need authentication
-app.use('/api/streams', authMiddleware, (req, res, next) => {
-  // Your protected stream routes
-  next();
+// Serve recorded videos
+app.use('/recordings', express.static(recordingsPath));
+
+// API endpoint to list recordings
+app.get('/api/recordings', authenticate, (req, res) => { // Changed authMiddleware to authenticate
+  try {
+    const files = fs.readdirSync(recordingsPath);
+    const recordings = files.map(file => {
+      const filePath = path.join(recordingsPath, file);
+      const stats = fs.statSync(filePath);
+      return {
+        filename: file,
+        path: filePath,
+        size: stats.size,
+        createdAt: stats.birthtime
+      };
+    });
+    
+    res.json({
+      status: 'success',
+      data: recordings
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to retrieve recordings'
+    });
+  }
+});
+
+// API endpoint to upload a recording to IPFS
+app.post('/api/recordings/:filename/ipfs', authenticate, async (req, res) => { // Changed authMiddleware to authenticate
+  const { filename } = req.params;
+  const filePath = path.join(recordingsPath, filename);
+  
+  try {
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Recording not found'
+      });
+    }
+    
+    // Upload to IPFS
+    const cid = await ipfsService.addFile(filePath);
+    
+    res.json({
+      status: 'success',
+      data: {
+        cid,
+        url: ipfsService.getGatewayUrl(cid),
+        filename
+      }
+    });
+  } catch (error) {
+    logger.error('Error uploading to IPFS', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to upload to IPFS'
+    });
+  }
+});
+
+// API endpoint to delete a recording
+app.delete('/api/recordings/:filename', authenticate, (req, res) => { // Changed authMiddleware to authenticate
+  const { filename } = req.params;
+  const filePath = path.join(recordingsPath, filename);
+  
+  try {
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Recording not found'
+      });
+    }
+    
+    // Delete the file
+    fs.unlinkSync(filePath);
+    
+    res.json({
+      status: 'success',
+      message: 'Recording deleted successfully'
+    });
+  } catch (error) {
+    logger.error('Error deleting recording', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to delete recording'
+    });
+  }
 });
 
 // API endpoint for retrieving active streams
@@ -313,7 +401,7 @@ app.get('/api/streams', (req, res) => {
 });
 
 // IPFS API routes
-app.get('/api/ipfs/status', authMiddleware, (req, res) => {
+app.get('/api/ipfs/status', (req, res) => {
   const status = ipfsService.getStatus();
   res.json({
     status: 'success',
@@ -321,7 +409,7 @@ app.get('/api/ipfs/status', authMiddleware, (req, res) => {
   });
 });
 
-app.post('/api/ipfs/upload', authMiddleware, async (req, res) => {
+app.post('/api/ipfs/upload', async (req, res) => {
   try {
     const { recordingPath } = req.body;
     
@@ -384,7 +472,7 @@ app.get('/api/ipfs/content/:cid', async (req, res) => {
   }
 });
 
-app.post('/api/ipfs/pin', authMiddleware, async (req, res) => {
+app.post('/api/ipfs/pin', async (req, res) => {
   try {
     const { cid } = req.body;
     
@@ -411,7 +499,7 @@ app.post('/api/ipfs/pin', authMiddleware, async (req, res) => {
 });
 
 // Recording API routes
-app.get('/api/recordings', authMiddleware, (req, res) => {
+app.get('/api/recordings', authenticate, (req, res) => {
   const recordings = recordingService.getRecordings();
   res.json({
     status: 'success',
@@ -419,7 +507,7 @@ app.get('/api/recordings', authMiddleware, (req, res) => {
   });
 });
 
-app.post('/api/recordings/:filename/ipfs', authMiddleware, async (req, res) => {
+app.post('/api/recordings/:filename/ipfs', authenticate, async (req, res) => {
   const { filename } = req.params;
   
   try {
@@ -449,7 +537,7 @@ app.post('/api/recordings/:filename/ipfs', authMiddleware, async (req, res) => {
   }
 });
 
-app.delete('/api/recordings/:filename', authMiddleware, (req, res) => {
+app.delete('/api/recordings/:filename', authenticate, (req, res) => {
   const { filename } = req.params;
   
   const result = recordingService.deleteRecording(filename);

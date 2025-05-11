@@ -1,3 +1,4 @@
+// filepath: c:\Users\Sam\Documents\GitHub\live-video-player\backend\src\services\IPFSService.ts
 import * as fs from 'fs';
 import * as path from 'path';
 import { createHelia } from 'helia';
@@ -7,14 +8,12 @@ import { CID } from 'multiformats/cid';
 import ipfsConfig from '../config/ipfsConfig';
 import { LoggerService } from './LoggerService';
 import { FsBlockstore } from 'blockstore-fs';
-import { MemoryDatastore } from 'datastore-memory'; // Added import
 import { createLibp2p } from 'libp2p';
 import { noise } from '@chainsafe/libp2p-noise';
 import { yamux } from '@chainsafe/libp2p-yamux';
 import { webSockets } from '@libp2p/websockets';
 import { bootstrap } from '@libp2p/bootstrap';
 import type { Multiaddr } from '@multiformats/multiaddr';
-import { createPeerId } from '@libp2p/peer-id-factory'; // Added import
 
 /**
  * Service for handling IPFS operations
@@ -101,11 +100,9 @@ export class IPFSService {
       
       // Create blockstore
       const blockstore = new FsBlockstore(repoPath);
-      const datastore = new MemoryDatastore(); // Create datastore instance
       
       // Create libp2p for Helia
       const libp2p = await createLibp2p({
-        datastore, // Pass datastore to libp2p
         addresses: {
           listen: [
             '/ip4/0.0.0.0/tcp/4001',
@@ -128,7 +125,6 @@ export class IPFSService {
       
       // Create Helia node with libp2p
       this.helia = await createHelia({
-        datastore, // Pass datastore to Helia
         blockstore,
         libp2p
       });

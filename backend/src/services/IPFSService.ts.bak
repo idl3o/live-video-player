@@ -7,14 +7,14 @@ import { CID } from 'multiformats/cid';
 import ipfsConfig from '../config/ipfsConfig';
 import { LoggerService } from './LoggerService';
 import { FsBlockstore } from 'blockstore-fs';
-import { MemoryDatastore } from 'datastore-memory'; // Added import
 import { createLibp2p } from 'libp2p';
 import { noise } from '@chainsafe/libp2p-noise';
 import { yamux } from '@chainsafe/libp2p-yamux';
 import { webSockets } from '@libp2p/websockets';
 import { bootstrap } from '@libp2p/bootstrap';
 import type { Multiaddr } from '@multiformats/multiaddr';
-import { createPeerId } from '@libp2p/peer-id-factory'; // Added import
+import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
+import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 
 /**
  * Service for handling IPFS operations
@@ -27,7 +27,6 @@ export class IPFSService {
   private httpClient: any;
   private isNodeRunning: boolean;
   private isClientConnected: boolean;
-
   /**
    * Constructor for IPFSService
    */
@@ -55,7 +54,6 @@ export class IPFSService {
       return false;
     }
   }
-
   /**
    * Connect to an external IPFS node
    * Note: This is connecting to a compatible HTTP API rather than using Helia directly
@@ -85,7 +83,6 @@ export class IPFSService {
       return false;
     }
   }
-
   /**
    * Start an embedded IPFS node
    */
@@ -98,14 +95,9 @@ export class IPFSService {
       if (!fs.existsSync(repoPath)) {
         fs.mkdirSync(repoPath, { recursive: true });
       }
-      
-      // Create blockstore
-      const blockstore = new FsBlockstore(repoPath);
-      const datastore = new MemoryDatastore(); // Create datastore instance
-      
-      // Create libp2p for Helia
+        // Create blockstore
+      const blockstore = new FsBlockstore(repoPath);      // Create a libp2p node with the appropriate configuration for Helia
       const libp2p = await createLibp2p({
-        datastore, // Pass datastore to libp2p
         addresses: {
           listen: [
             '/ip4/0.0.0.0/tcp/4001',
@@ -128,7 +120,6 @@ export class IPFSService {
       
       // Create Helia node with libp2p
       this.helia = await createHelia({
-        datastore, // Pass datastore to Helia
         blockstore,
         libp2p
       });
@@ -139,6 +130,8 @@ export class IPFSService {
       // Get the node ID
       const peerId = this.helia.libp2p.peerId;
       this.logger.info(`Started embedded Helia IPFS node: ${peerId.toString()}`);
+      
+      // Connect to bootstrap nodes is now handled by the bootstrap service
       
       this.isNodeRunning = true;
       this.isClientConnected = true;
@@ -151,7 +144,6 @@ export class IPFSService {
       return false;
     }
   }
-
   /**
    * Get the IPFS node status
    */
@@ -193,7 +185,6 @@ export class IPFSService {
       };
     }
   }
-
   /**
    * Get the IPFS node info
    */
@@ -212,7 +203,7 @@ export class IPFSService {
           id: peerId.toString(),
           version: 'Helia', // Helia doesn't have a direct version field
           peersCount: peers.length,
-          addresses: addresses.map((addr: Multiaddr) => addr.toString())
+          addresses: addresses.map(addr => addr.toString())
         };
       } else if (this.httpClient) {
         const id = await this.httpClient.id();
@@ -233,7 +224,6 @@ export class IPFSService {
       throw error;
     }
   }
-
   /**
    * Add a file to IPFS
    * @param filePath File path to add
@@ -309,7 +299,6 @@ export class IPFSService {
       throw error;
     }
   }
-
   /**
    * Add content to IPFS
    * @param content Content to add
@@ -378,7 +367,6 @@ export class IPFSService {
       throw error;
     }
   }
-
   /**
    * Get content from IPFS
    * @param cid CID of the content to get
@@ -395,8 +383,7 @@ export class IPFSService {
       let content: Buffer;
       
       // Use appropriate client based on what's available
-      if (this.helia && this.fs) {
-        // Get content from IPFS using Helia UnixFS
+      if (this.helia && this.fs) {      // Get content from IPFS using Helia UnixFS
         const parsedCid = CID.parse(cid) as any;
         const chunks: Uint8Array[] = [];
         
@@ -421,12 +408,11 @@ export class IPFSService {
       this.logger.info(`Content retrieved from IPFS: ${cid} (${content.length} bytes)`);
       
       return content;
-    } catch (error: any) {
+    } catch (error) {
       this.logger.error(`Error getting content from IPFS: ${cid}`, error);
       throw error;
     }
   }
-
   /**
    * Pin content to IPFS
    * @param cid CID of the content to pin
@@ -438,9 +424,7 @@ export class IPFSService {
       }
       
       this.logger.info(`Pinning content: ${cid}`);
-      
-      // Use appropriate client based on what's available
-      if (this.helia && this.fs) {
+        // Use appropriate client based on what's available      if (this.helia && this.fs) {
         // In Helia, content is automatically pinned when added
         // We need to ensure the content exists by trying to fetch it first
         const parsedCid = CID.parse(cid) as any;
@@ -457,7 +441,7 @@ export class IPFSService {
           } else {
             throw new Error(`Content does not exist in Helia: ${cid}`);
           }
-        } catch (error: any) {
+        } catch (error) {
           this.logger.error(`Content does not exist in Helia and cannot be pinned: ${cid}`, error);
           throw new Error(`Content does not exist in Helia: ${cid}`);
         }
@@ -471,12 +455,11 @@ export class IPFSService {
       
       // If remote pinning is enabled, pin to remote services
       await this.pinToRemoteServices(cid);
-    } catch (error: any) {
+    } catch (error) {
       this.logger.error(`Error pinning content: ${cid}`, error);
       throw error;
     }
   }
-
   /**
    * Unpin content from IPFS
    * @param cid CID of the content to unpin
@@ -501,7 +484,7 @@ export class IPFSService {
       } else {
         throw new Error('No IPFS client initialized');
       }
-    } catch (error: any) {
+    } catch (error) {
       this.logger.error(`Error unpinning content: ${cid}`, error);
       throw error;
     }
@@ -528,7 +511,7 @@ export class IPFSService {
         // to pin the content to the remote service
         
         this.logger.info(`Pinned content to ${service.name}: ${cid}`);
-      } catch (error: any) {
+      } catch (error) {
         this.logger.error(`Error pinning content to ${service.name}: ${cid}`, error);
       }
     }
@@ -544,7 +527,6 @@ export class IPFSService {
     const gatewayUrl = this.isNodeRunning ? ipfsConfig.gatewayUrl : ipfsConfig.publicGateway;
     return `${gatewayUrl}/${cid}`;
   }
-
   /**
    * Stop IPFS node or client
    */
@@ -562,7 +544,7 @@ export class IPFSService {
       this.isClientConnected = false;
       
       this.logger.info('IPFS node stopped');
-    } catch (error: any) {
+    } catch (error) {
       this.logger.error('Error stopping IPFS node', error);
     }
   }

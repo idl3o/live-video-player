@@ -39,7 +39,6 @@ export default {
       '/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt'
     ]
   },
-  
   // Pinning configuration
   pinning: {
     // Whether to automatically pin content when adding
@@ -65,5 +64,14 @@ export default {
         token: 'YOUR_WEB3_STORAGE_TOKEN'
       }
     ]
+  },
+  
+  // Recording configuration
+  recording: {
+    // Whether to automatically upload recordings to IPFS
+    autoUpload: false,
+    
+    // Whether to keep local copies of recordings after upload
+    keepLocal: true
   }
 };
