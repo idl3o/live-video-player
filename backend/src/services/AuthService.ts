@@ -5,7 +5,6 @@ import { generateNonce, SiweMessage } from 'siwe';
 import { User, UserRole, UserCredentials, UserSession } from '../models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
-const TOKEN_EXPIRY = '24h';
 const SALT_ROUNDS = 10;
 const NONCE_TTL_MS = 5 * 60 * 1000;
 
@@ -152,7 +151,9 @@ export class AuthService {
       allowedToStream: user.allowedToStream,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
     };
-    return jwt.sign(session, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
+    // Note: exp is set inside the payload — don't pass expiresIn or jsonwebtoken
+    // throws "Bad expiresIn option the payload already has an exp property".
+    return jwt.sign(session, JWT_SECRET);
   }
 
   private gcNonces(): void {
