@@ -4,7 +4,7 @@ import type { Address } from 'viem';
 import { api, getToken, MeResponse, setToken, Stream } from './api/client';
 import { SiweConnect } from './components/SiweConnect';
 import { StreamList } from './components/StreamList';
-import { FlvPlayer } from './components/FlvPlayer';
+import { StreamPlayer } from './components/StreamPlayer';
 import { Chat } from './components/Chat';
 import { RecordingsList } from './components/RecordingsList';
 import { TipButton } from './components/TipButton';
@@ -16,6 +16,7 @@ export default function App() {
   const [user, setUser] = useState<MeResponse | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
+  const [lowLatency, setLowLatency] = useState(false);
 
   const loadMe = async () => {
     if (!getToken()) {
@@ -84,8 +85,16 @@ export default function App() {
           {selectedStream ? (
             <>
               <div className="viewer-main">
-                <FlvPlayer streamKey={selectedStream.stream} />
+                <StreamPlayer streamKey={selectedStream.stream} preferLowLatency={lowLatency} />
                 <div className="viewer-meta">
+                  <label className="latency-toggle" title="HLS (default) plays on iOS; FLV is ~2s lower latency but desktop only">
+                    <input
+                      type="checkbox"
+                      checked={lowLatency}
+                      onChange={(e) => setLowLatency(e.target.checked)}
+                    />
+                    low-latency (FLV)
+                  </label>
                   <div className="viewer-title">
                     <div>{selectedStream.streamerUsername || selectedStream.stream}</div>
                     {streamerAddress && <AttestationBadges address={streamerAddress} />}

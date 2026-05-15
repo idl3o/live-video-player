@@ -196,12 +196,58 @@ main {
 .praise-btn:hover:not(:disabled) { color: #ffd166; border-color: #ffd166; }
 .praise-confirmed { color: #ffd166; }
 
-.player-video {
+.player-wrap {
+  position: relative;
   width: 100%;
   flex: 1;
   min-height: 0;
   background: black;
 }
+
+.player-video {
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+.player-error {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  padding: 6px 12px;
+  background: rgba(0,0,0,0.7);
+  color: var(--error);
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: ui-monospace, monospace;
+}
+
+.player-engine {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 8px;
+  background: rgba(0,0,0,0.5);
+  color: var(--fg-dim);
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.latency-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--fg-dim);
+  align-self: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.latency-toggle input { margin: 0; }
 
 .tip-box {
   display: flex;

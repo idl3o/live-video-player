@@ -50,7 +50,7 @@ npx hardhat ignition deploy ./ignition/modules/Lock.ts
 **Three servers in one process.** [backend/src/server.ts](backend/src/server.ts) starts:
 1. Express API on `API_PORT` (default `45001`) — auth, recordings, IPFS, stream listing.
 2. Node-Media-Server RTMP ingest on `RTMP_PORT` (default `45935`) — OBS publishes to `rtmp://host:45935/live/<key>?token=<jwt>`.
-3. Node-Media-Server HTTP-FLV playback on `HTTP_PORT` (default `45000`) — clients pull `http://host:45000/live/<key>.flv`.
+3. Node-Media-Server HTTP playback on `HTTP_PORT` (default `45000`) — clients pull HLS at `http://host:45000/live/<key>/index.m3u8` (default, iOS-compatible) or HTTP-FLV at `http://host:45000/live/<key>.flv` (low-latency fallback, desktop only). Both come from the same `trans.tasks` config.
 4. Socket.io chat is attached to the same HTTP server as the Express API via `ChatService`.
 
 **Auth flow.** REST routes ([backend/src/routes/authRoutes.ts](backend/src/routes/authRoutes.ts)) issue JWTs and are gated by [`authenticate` middleware](backend/src/middleware/authMiddleware.ts). RTMP publish/play are gated separately inside Node-Media-Server `prePublish`/`prePlay` handlers in [server.ts](backend/src/server.ts), which call `AuthService.verifyStreamToken` against the `?token=` query param on the RTMP URL. Two env flags control enforcement:

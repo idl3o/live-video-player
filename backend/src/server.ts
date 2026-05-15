@@ -93,8 +93,14 @@ const nmsConfig = {
     tasks: [
       {
         app: 'live',
+        // mp4 recording — picked up by RecordingService on donePublish
         mp4: true,
         mp4Flags: '[movflags=frag_keyframe+empty_moov]',
+        // HLS playback — generates index.m3u8 + 2-second .ts segments under
+        // <mediaroot>/live/<streamKey>/, served by NMS on HTTP_PORT.
+        // Required for iOS Safari (no MSE-for-FLV) and modern mobile in general.
+        hls: true,
+        hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments+omit_endlist]',
       },
     ],
   },
