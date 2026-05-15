@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { RecordingService } from './RecordingService';
-import { LoggerService } from './LoggerService';
+import { RecordingService } from './RecordingService.js';
+import { LoggerService } from './LoggerService.js';
 
 // Minimal IPFSService stub — only the methods RecordingService actually calls.
 class FakeIPFS {

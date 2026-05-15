@@ -2,9 +2,9 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createServer, type Server } from 'http';
 import { AddressInfo } from 'net';
 import { io as Client, type Socket } from 'socket.io-client';
-import { ChatService } from './ChatService';
-import { authService } from './AuthService';
-import { UserRole } from '../models/User';
+import { ChatService } from './ChatService.js';
+import { authService } from './AuthService.js';
+import { UserRole } from '../models/User.js';
 
 // End-to-end socket.io test: starts a real chat service on a random port and
 // connects two clients (one authed, one anonymous) to verify identity is

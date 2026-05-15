@@ -5,8 +5,8 @@ import { unixfs, type UnixFS } from '@helia/unixfs';
 import { CID } from 'multiformats/cid';
 import { FsBlockstore } from 'blockstore-fs';
 import { FsDatastore } from 'datastore-fs';
-import ipfsConfig from '../config/ipfsConfig';
-import { LoggerService } from './LoggerService';
+import ipfsConfig from '../config/ipfsConfig.js';
+import { LoggerService } from './LoggerService.js';
 
 interface IPFSStatus {
   isNodeRunning: boolean;

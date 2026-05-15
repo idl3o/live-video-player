@@ -1,7 +1,7 @@
 import express from 'express';
-import { authService } from '../services/AuthService';
-import { authenticate, authorize } from '../middleware/authMiddleware';
-import { UserRole } from '../models/User';
+import { authService } from '../services/AuthService.js';
+import { authenticate, authorize } from '../middleware/authMiddleware.js';
+import { UserRole } from '../models/User.js';
 
 const router = express.Router();
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { authService } from '../services/AuthService';
-import { UserRole } from '../models/User';
+import { authService } from '../services/AuthService.js';
+import { UserRole } from '../models/User.js';
 
 declare global {
   namespace Express {

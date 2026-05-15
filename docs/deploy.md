@@ -109,6 +109,8 @@ The build cache reuses layers as long as `package.json` files don't change.
 - **Recording never gets uploaded to Storacha** — check `docker compose logs backend | grep -i storacha`. Common cause: `STORACHA_PROOF` not base64-encoded; it must be the base64 form from `storacha delegation create --base64`.
 - **`docker build` fails with `mount callback failed ... input/output error` during image export** — the host machine is low on disk space; Docker Desktop's VM can't write its build cache. Free space on the host (`df -h`), then `docker system prune -a -f` once the daemon is responsive again. The image build itself takes ~3-5GB of layer space.
 - **`docker build` fails with `gyp ERR! find Python`** — fixed in current Dockerfile (both frontend and backend stages install `python3 make g++` in alpine). If you see this on an older checkout, pull the latest.
+- **`Uncaught exception ReferenceError: version is not defined` in backend logs at startup** — upstream bug in `node-media-server@2.7.4` (referenced but undeclared variable in their trans server's log line). Our `process.on('uncaughtException')` catches it; the trans subsystem's event listeners are already registered before the throw, so HLS + recording still work. Cosmetic log noise only.
+- **`ERR_PACKAGE_PATH_NOT_EXPORTED` for helia** — the backend used to be CommonJS and `require()`'d helia which is ESM-only. Fixed in the current backend (now ESM throughout). If you forked an older revision, run `npm run build && npm test` to verify the migration is in place.
 
 ## What's not in this deploy
 

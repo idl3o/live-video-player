@@ -2,23 +2,25 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import fs from 'fs';
 import net from 'net';
+import { createServer } from 'http';
 import NodeMediaServer from 'node-media-server';
 import dotenv from 'dotenv';
 import { fileTypeFromBuffer } from 'file-type';
-import { LoggerService } from './services/LoggerService';
-import { authService } from './services/AuthService';
-import { ChatService } from './services/ChatService';
-import { IPFSService } from './services/IPFSService';
-import { RecordingService } from './services/RecordingService';
-import { authenticate } from './middleware/authMiddleware';
-import { authRoutes } from './routes/authRoutes';
+import { LoggerService } from './services/LoggerService.js';
+import { authService } from './services/AuthService.js';
+import { ChatService } from './services/ChatService.js';
+import { IPFSService } from './services/IPFSService.js';
+import { RecordingService } from './services/RecordingService.js';
+import { authenticate } from './middleware/authMiddleware.js';
+import { authRoutes } from './routes/authRoutes.js';
 
 dotenv.config();
 
 // In production, refuse to start with the documented dev-default secrets.
-import { findWeakSecrets } from './lib/checkSecrets';
+import { findWeakSecrets } from './lib/checkSecrets.js';
 const weakSecrets = findWeakSecrets(process.env);
 if (weakSecrets.length > 0) {
   console.error(
@@ -61,7 +63,11 @@ app.use(
 app.use(cors());
 app.use(express.json());
 
-const http = require('http').createServer(app);
+const http = createServer(app);
+
+// ESM doesn't have __dirname; recover it from import.meta.url.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const mediaRoot = path.join(__dirname, '../media');
 const recordingsPath = path.join(mediaRoot, 'recordings');
@@ -159,6 +165,17 @@ app.get('/app', (req, res) => {
 
 const nms = new NodeMediaServer(nmsConfig);
 
+// Active streams index — NMS v2 doesn't expose a public getStreams() method,
+// so we maintain our own map by listening to the same publish lifecycle events
+// we already hook for auth + recording.
+interface ActiveStream {
+  app: string;
+  streamKey: string;
+  publishedAt: number;
+  publisherId: string;
+}
+const activeStreams = new Map<string, ActiveStream>();
+
 process.on('uncaughtException', (error: any) => {
   logger.error('Uncaught exception', error);
   if (error.code === 'EADDRINUSE') {
@@ -224,6 +241,15 @@ nms.on('prePlay', (id, StreamPath, args) => {
 
 nms.on('postPublish', (id, StreamPath) => {
   logger.info(`[postPublish] path=${StreamPath}`);
+  const [, app, streamKey] = StreamPath.split('/');
+  if (app && streamKey) {
+    activeStreams.set(StreamPath, {
+      app,
+      streamKey,
+      publishedAt: Date.now(),
+      publisherId: id,
+    });
+  }
   const result = recordingService.configureRecording(StreamPath);
   if (result.success) {
     logger.info(`Recording configured for ${StreamPath} -> ${result.recordingPath}`);
@@ -236,6 +262,7 @@ nms.on('postPublish', (id, StreamPath) => {
 // We poll briefly for the expected file (in mediaRoot/<app>/<stream>.mp4), then process it.
 nms.on('donePublish', async (id, StreamPath) => {
   logger.info(`[donePublish] path=${StreamPath}`);
+  activeStreams.delete(StreamPath);
   const [, app, streamKey] = StreamPath.split('/');
   if (!streamKey) return;
 
@@ -289,27 +316,20 @@ app.use('/api/auth', authRoutes);
 app.use('/recordings', express.static(recordingsPath));
 
 app.get('/api/streams', (req, res) => {
-  const activeStreams = nms.getStreams();
-  const streamData = Object.entries(activeStreams).map(([key, value]: [string, any]) => {
-    const parts = key.split('/');
-    const streamKey = parts[2];
-    const streamer = streamKey ? authService.getUserByStreamKey(streamKey) : undefined;
+  const streamData = Array.from(activeStreams.entries()).map(([streamPath, stream]) => {
+    const streamer = authService.getUserByStreamKey(stream.streamKey);
     return {
-      id: key,
-      app: parts[1],
-      stream: streamKey,
+      id: streamPath,
+      app: stream.app,
+      stream: stream.streamKey,
       streamerAddress: streamer?.walletAddress,
       streamerUsername: streamer?.username,
-      publisher: value.publisher
-        ? {
-            type: value.publisher.type,
-            clientId: value.publisher.clientId,
-            ip: value.publisher.ip,
-            audio: value.publisher.audio,
-            video: value.publisher.video,
-          }
-        : null,
-      subscribers: Object.keys(value.subscribers).length,
+      publishedAt: stream.publishedAt,
+      publisher: { id: stream.publisherId },
+      // NMS v2 doesn't expose a per-stream subscriber count via public API; we
+      // return 0 here for compatibility. Track via prePlay/donePlay events
+      // if/when the frontend needs accurate viewer counts.
+      subscribers: 0,
     };
   });
   res.json({ success: true, streams: streamData });

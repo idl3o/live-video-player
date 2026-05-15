@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { AuthService } from './AuthService';
-import { UserRole } from '../models/User';
+import { AuthService } from './AuthService.js';
+import { UserRole } from '../models/User.js';
 
 describe('AuthService', () => {
   let auth: AuthService;

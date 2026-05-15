@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import type { Request, Response } from 'express';
-import { authenticate, authService } from './authMiddleware';
-import { UserRole } from '../models/User';
+import { authenticate, authService } from './authMiddleware.js';
+import { UserRole } from '../models/User.js';
 
 function mockReq(headers: Record<string, string> = {}): Request {
   return { headers } as unknown as Request;

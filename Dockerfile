@@ -12,7 +12,7 @@
 ###############################################################################
 # Stage 1: frontend build
 ###############################################################################
-FROM node:20-alpine AS frontend
+FROM node:22-alpine AS frontend
 WORKDIR /app/frontend
 
 # Native toolchain — bufferutil (transitive from socket.io-client and wagmi's
@@ -34,7 +34,7 @@ RUN npm run build
 ###############################################################################
 # Stage 2: backend build
 ###############################################################################
-FROM node:20-alpine AS backend-build
+FROM node:22-alpine AS backend-build
 WORKDIR /app/backend
 
 # Native builds (bcrypt) need a toolchain in alpine.
@@ -52,7 +52,7 @@ RUN npm prune --omit=dev --legacy-peer-deps
 ###############################################################################
 # Stage 3: runtime
 ###############################################################################
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # Runtime libs: ffmpeg comes from the ffmpeg-static npm package (carried in

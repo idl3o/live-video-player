@@ -3,7 +3,7 @@ import {
   DEFAULT_JWT_SECRET,
   DEFAULT_STREAM_SECRET,
   findWeakSecrets,
-} from './checkSecrets';
+} from './checkSecrets.js';
 
 describe('findWeakSecrets', () => {
   it('returns nothing outside of production, even with weak secrets', () => {

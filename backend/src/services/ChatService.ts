@@ -8,9 +8,9 @@ import {
   ChatRoomState,
   ChatRoomSettings,
   ChatEvent,
-} from '../models/ChatMessage';
-import { authService } from './AuthService';
-import { UserRole } from '../models/User';
+} from '../models/ChatMessage.js';
+import { authService } from './AuthService.js';
+import { UserRole } from '../models/User.js';
 
 // Identity established on `register`. Derived from the JWT when provided;
 // otherwise an anonymous viewer with no special roles.

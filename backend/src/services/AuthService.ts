@@ -2,7 +2,7 @@ import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { generateNonce, SiweMessage } from 'siwe';
-import { User, UserRole, UserCredentials, UserSession } from '../models/User';
+import { User, UserRole, UserCredentials, UserSession } from '../models/User.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 const SALT_ROUNDS = 10;

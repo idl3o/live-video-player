@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { LoggerService } from './LoggerService';
-import { IPFSService } from './IPFSService';
-import ipfsConfig from '../config/ipfsConfig';
+import { LoggerService } from './LoggerService.js';
+import { IPFSService } from './IPFSService.js';
+import ipfsConfig from '../config/ipfsConfig.js';
 
 /**
  * Interface for recording data
