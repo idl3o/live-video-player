@@ -112,7 +112,7 @@ export default function App() {
                   )}
                 </div>
               </div>
-              <Chat streamKey={selectedStream.stream} username={user.username} />
+              <Chat streamKey={selectedStream.stream} />
             </>
           ) : (
             <div className="placeholder">Select a stream to start watching.</div>

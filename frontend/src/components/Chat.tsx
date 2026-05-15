@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { getToken } from '../api/client';
 
 interface Message {
   id: string;
@@ -12,10 +13,9 @@ interface Message {
 
 interface Props {
   streamKey: string;
-  username: string;
 }
 
-export function Chat({ streamKey, username }: Props) {
+export function Chat({ streamKey }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState('');
   const [roomId, setRoomId] = useState<string | null>(null);
@@ -27,10 +27,12 @@ export function Chat({ streamKey, username }: Props) {
     socketRef.current = socket;
 
     socket.on('connect', () => {
-      socket.emit('register', { username });
+      // Backend derives the authoritative username + roles from this JWT.
+      // If absent, the user joins as an anonymous viewer.
+      socket.emit('register', { token: getToken() ?? undefined });
     });
     socket.on('registered', () => {
-      socket.emit('join-room', { roomId: `stream_${streamKey}`, streamKey, user: { username } });
+      socket.emit('join-room', { roomId: `stream_${streamKey}`, streamKey });
     });
     socket.on('room-joined', (data: { roomId: string; recentMessages: Message[] }) => {
       setRoomId(data.roomId);
@@ -47,7 +49,7 @@ export function Chat({ streamKey, username }: Props) {
       socket.disconnect();
       socketRef.current = null;
     };
-  }, [streamKey, username]);
+  }, [streamKey]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
