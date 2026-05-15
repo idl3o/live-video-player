@@ -10,6 +10,7 @@ import { RecordingsList } from './components/RecordingsList';
 import { TipButton } from './components/TipButton';
 import { RecentTips } from './components/RecentTips';
 import { PaymentStream } from './components/PaymentStream';
+import { AttestationBadges } from './components/AttestationBadges';
 
 export default function App() {
   const [user, setUser] = useState<MeResponse | null>(null);
@@ -76,7 +77,7 @@ export default function App() {
       <main>
         <div className="sidebar">
           <StreamList selected={selectedStream?.stream ?? null} onSelect={setSelectedStream} />
-          <RecordingsList />
+          <RecordingsList streamerAddress={streamerAddress} />
         </div>
 
         <section className="viewer">
@@ -86,7 +87,8 @@ export default function App() {
                 <FlvPlayer streamKey={selectedStream.stream} />
                 <div className="viewer-meta">
                   <div className="viewer-title">
-                    {selectedStream.streamerUsername || selectedStream.stream}
+                    <div>{selectedStream.streamerUsername || selectedStream.stream}</div>
+                    {streamerAddress && <AttestationBadges address={streamerAddress} />}
                   </div>
                   {streamerAddress ? (
                     <>

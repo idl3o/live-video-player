@@ -165,7 +165,36 @@ main {
   align-self: center;
   min-width: 0;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
+
+.attestation-badges { display: flex; gap: 6px; }
+.attestation-badges .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+.attestation-badges .badge.praise { color: #ffd166; border-color: #ffd16633; }
+.attestation-badges .badge.endorse { color: #4f8cff; border-color: #4f8cff33; }
+
+.praise-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg-dim);
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+}
+.praise-btn:hover:not(:disabled) { color: #ffd166; border-color: #ffd166; }
+.praise-confirmed { color: #ffd166; }
 
 .player-video {
   width: 100%;

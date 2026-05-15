@@ -2,6 +2,15 @@
 
 A 6–9 month plan to take this from "compiles and streams" to "runnable by strangers on the public internet."
 
+> **Update — Web3 sprint complete.** The five Web3 primitives originally
+> queued for Phase 3 (SIWE identity, USDC tipping, Superfluid per-second
+> payment streams, Storacha/Filecoin pinning, EAS attestation substrate)
+> have been pulled forward and shipped on Base Sepolia. The phases below
+> describe the original conventional plan; consider Phase 1's auth/identity
+> work and most of Phase 3 done. The remaining priorities are HLS (mobile
+> playback), tests/CI, database persistence beyond wallet-as-identity, and
+> the deploy story (Phase 4).
+
 ## North star
 
 A self-hostable, single-node live streaming platform where:

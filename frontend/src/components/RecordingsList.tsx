@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
+import type { Address } from 'viem';
 import { api, Recording } from '../api/client';
+import { PraiseButton } from './PraiseButton';
+
+interface Props {
+  streamerAddress?: Address;
+}
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes}B`;
@@ -12,7 +18,7 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleString();
 }
 
-export function RecordingsList() {
+export function RecordingsList({ streamerAddress }: Props) {
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +76,9 @@ export function RecordingsList() {
               <a href={`/recordings/${r.filename}`} target="_blank" rel="noreferrer">
                 ▶ play
               </a>
+              {streamerAddress && r.ipfsData?.cid && (
+                <PraiseButton contentCid={r.ipfsData.cid} recipient={streamerAddress} />
+              )}
             </div>
           </li>
         ))}
