@@ -8,6 +8,7 @@ import { FlvPlayer } from './components/FlvPlayer';
 import { Chat } from './components/Chat';
 import { TipButton } from './components/TipButton';
 import { RecentTips } from './components/RecentTips';
+import { PaymentStream } from './components/PaymentStream';
 
 export default function App() {
   const [user, setUser] = useState<MeResponse | null>(null);
@@ -86,6 +87,7 @@ export default function App() {
                   {streamerAddress ? (
                     <>
                       <TipButton streamerAddress={streamerAddress} />
+                      <PaymentStream streamerAddress={streamerAddress} />
                       <RecentTips streamerAddress={streamerAddress} />
                     </>
                   ) : (
