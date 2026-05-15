@@ -51,6 +51,7 @@
     "@types/node": "^18.19.87",
     "@vitest/coverage-v8": "^4.1.6",
     "nodemon": "^2.0.22",
+    "socket.io-client": "^4.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vitest": "^4.1.6"
