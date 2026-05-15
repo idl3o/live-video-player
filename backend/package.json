@@ -9,7 +9,12 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["live-streaming", "obs", "rtmp", "video-player"],
+  "keywords": [
+    "live-streaming",
+    "obs",
+    "rtmp",
+    "video-player"
+  ],
   "license": "ISC",
   "dependencies": {
     "@helia/unixfs": "^5.0.0",
@@ -30,8 +35,10 @@
     "jsonwebtoken": "^9.0.2",
     "multiformats": "^13.3.0",
     "node-media-server": "^2.5.0",
+    "siwe": "^3.0.0",
     "socket.io": "^4.8.1",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "viem": "^2.49.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

@@ -11,7 +11,9 @@ export function setToken(token: string | null) {
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
-  headers.set('Content-Type', 'application/json');
+  if (init.body && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
   const token = getToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
 
@@ -42,6 +44,7 @@ export interface MeResponse {
   username: string;
   role: string;
   streamKey?: string;
+  walletAddress?: string;
   allowedToStream: boolean;
 }
 
@@ -64,4 +67,13 @@ export const api = {
 
   regenerateStreamKey: () =>
     request<{ streamKey: string }>('/api/auth/regenerate-stream-key', { method: 'POST' }),
+
+  siweNonce: (address: string) =>
+    request<{ nonce: string }>(`/api/auth/siwe/nonce?address=${address}`),
+
+  siweVerify: (message: string, signature: string) =>
+    request<{ token: string; user: MeResponse }>('/api/auth/siwe/verify', {
+      method: 'POST',
+      body: JSON.stringify({ message, signature }),
+    }),
 };

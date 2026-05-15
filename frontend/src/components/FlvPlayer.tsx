@@ -6,7 +6,7 @@ interface Props {
   token?: string;
 }
 
-const HTTP_FLV_BASE = (import.meta as any).env?.VITE_FLV_BASE || 'http://localhost:45000';
+const HTTP_FLV_BASE = import.meta.env.VITE_FLV_BASE || 'http://localhost:45000';
 
 export function FlvPlayer({ streamKey, token }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);

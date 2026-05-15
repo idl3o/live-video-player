@@ -176,6 +176,26 @@ button {
 
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 
+.siwe-connect {
+  margin: 8vh auto;
+  max-width: 440px;
+  background: var(--bg-elev);
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.siwe-connect h2 { margin: 0; }
+.siwe-connect .muted { color: var(--fg-dim); font-size: 14px; margin: 0; }
+.siwe-connect .connect-row { display: flex; justify-content: center; padding: 4px 0; }
+.siwe-connect .primary { width: 100%; }
+.admin-fallback { margin-top: 8px; }
+.admin-fallback summary { color: var(--fg-dim); font-size: 13px; cursor: pointer; padding: 4px 0; }
+.admin-fallback .login { margin: 12px 0 0; padding: 16px; }
+
 .login {
   margin: 8vh auto;
   max-width: 360px;

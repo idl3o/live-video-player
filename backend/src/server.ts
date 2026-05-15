@@ -7,7 +7,7 @@ import NodeMediaServer from 'node-media-server';
 import dotenv from 'dotenv';
 import { fileTypeFromBuffer } from 'file-type';
 import { LoggerService } from './services/LoggerService';
-import { AuthService } from './services/AuthService';
+import { authService } from './services/AuthService';
 import { ChatService } from './services/ChatService';
 import { IPFSService } from './services/IPFSService';
 import { RecordingService } from './services/RecordingService';
@@ -46,7 +46,6 @@ if (!fs.existsSync(recordingsPath)) {
 }
 
 const logger = new LoggerService('Server');
-const authService = new AuthService();
 const chatService = new ChatService(http);
 const ipfsService = new IPFSService(logger);
 const recordingService = new RecordingService(logger, ipfsService);

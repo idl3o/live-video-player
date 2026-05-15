@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { api, getToken, MeResponse, setToken } from './api/client';
-import { Login } from './components/Login';
+import { SiweConnect } from './components/SiweConnect';
 import { StreamList } from './components/StreamList';
 import { FlvPlayer } from './components/FlvPlayer';
 import { Chat } from './components/Chat';
@@ -43,7 +44,7 @@ export default function App() {
         <header>
           <h1>Live Video Player</h1>
         </header>
-        <Login onLogin={loadMe} />
+        <SiweConnect onLogin={loadMe} />
       </div>
     );
   }
@@ -54,7 +55,13 @@ export default function App() {
         <h1>Live Video Player</h1>
         <div className="user-bar">
           <span>{user.username}</span>
+          {user.walletAddress && (
+            <code title="Wallet address">
+              {user.walletAddress.slice(0, 6)}…{user.walletAddress.slice(-4)}
+            </code>
+          )}
           {user.streamKey && <code title="Your stream key">{user.streamKey}</code>}
+          <ConnectButton showBalance={false} chainStatus="icon" accountStatus="avatar" />
           <button onClick={signOut}>Sign out</button>
         </div>
       </header>
