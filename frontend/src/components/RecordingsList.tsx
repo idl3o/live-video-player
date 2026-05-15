@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Address } from 'viem';
 import { api, Recording } from '../api/client';
 import { PraiseButton } from './PraiseButton';
+import { RegisterOnChainButton } from './RegisterOnChainButton';
 
 interface Props {
   streamerAddress?: Address;
@@ -78,6 +79,9 @@ export function RecordingsList({ streamerAddress }: Props) {
               </a>
               {streamerAddress && r.ipfsData?.cid && (
                 <PraiseButton contentCid={r.ipfsData.cid} recipient={streamerAddress} />
+              )}
+              {r.ipfsData?.cid && (
+                <RegisterOnChainButton contentCid={r.ipfsData.cid} title={r.filename} />
               )}
             </div>
           </li>

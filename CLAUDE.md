@@ -8,7 +8,7 @@ Three independent Node projects:
 
 - [backend/](backend/) — TypeScript Express API + Node-Media-Server (RTMP + HTTP-FLV) + Socket.io chat + Helia IPFS + recording pipeline. Entry point: [backend/src/server.ts](backend/src/server.ts).
 - [frontend/](frontend/) — Vite + React + TypeScript viewer. Plays HTTP-FLV via flv.js, talks to backend through Vite's dev proxy (port 3000 → 45001).
-- [blockchain/](blockchain/) — Hardhat project (Solidity 0.8.28). Contracts in [blockchain/contracts/](blockchain/contracts/), Ignition deployment modules in [blockchain/ignition/modules/](blockchain/ignition/modules/).
+- [blockchain/](blockchain/) — Hardhat project (Solidity 0.8.28, ethers v6). [LiveStreamContent.sol](blockchain/contracts/LiveStreamContent.sol) is a focused content-registry contract that anchors recording CIDs to creators on chain. Deploy via `npx hardhat ignition deploy ./ignition/modules/LiveStreamContent.ts --network <name>`. 5 tests live in [test/LiveStreamContent.ts](blockchain/test/LiveStreamContent.ts).
 
 ## Common commands
 

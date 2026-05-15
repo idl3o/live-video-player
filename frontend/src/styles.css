@@ -196,6 +196,27 @@ main {
 .praise-btn:hover:not(:disabled) { color: #ffd166; border-color: #ffd166; }
 .praise-confirmed { color: #ffd166; }
 
+.register-onchain {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg-dim);
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+}
+.register-onchain:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+
+.onchain-verified {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  border: 1px solid #4f8cff33;
+  color: #4f8cff;
+  text-decoration: none;
+}
+.onchain-verified:hover { background: #4f8cff11; }
+
 .player-wrap {
   position: relative;
   width: 100%;
