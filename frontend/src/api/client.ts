@@ -50,6 +50,20 @@ export interface MeResponse {
   allowedToStream: boolean;
 }
 
+export interface Recording {
+  filename: string;
+  path: string;
+  size: number;
+  createdAt: string;
+  ipfsData?: {
+    cid: string;
+    url: string;
+    storachaCid?: string;
+    storachaUrl?: string;
+    dateUploaded: string;
+  };
+}
+
 export const api = {
   login: (username: string, password: string) =>
     request<{ token: string }>('/api/auth/login', {
@@ -66,6 +80,9 @@ export const api = {
     }),
 
   listStreams: () => request<{ success: boolean; streams: Stream[] }>('/api/streams'),
+
+  listRecordings: () =>
+    request<{ status: string; data: Recording[] }>('/api/recordings'),
 
   regenerateStreamKey: () =>
     request<{ streamKey: string }>('/api/auth/regenerate-stream-key', { method: 'POST' }),

@@ -15,6 +15,8 @@ interface Recording {
   ipfsData?: {
     cid: string;
     url: string;
+    storachaCid?: string;
+    storachaUrl?: string;
     dateUploaded: string;
   };
 }
@@ -216,15 +218,29 @@ export class RecordingService {
         };
       }
       
-      // Add to IPFS
+      // Add to local Helia first
       const cid = await this.ipfsService.addFile(recordingPath);
       const url = this.ipfsService.getGatewayUrl(cid);
-      
-      // Create metadata
+
+      // Then push to Storacha (Filecoin-backed pinning) if configured
+      let storachaCid: string | undefined;
+      let storachaUrl: string | undefined;
+      try {
+        const storacha = await this.ipfsService.uploadToStoracha(recordingPath);
+        if (storacha) {
+          storachaCid = storacha.cid;
+          storachaUrl = storacha.gatewayUrl;
+        }
+      } catch (err) {
+        this.logger.error(`Storacha upload failed for ${fileName}, continuing with local pin only`, err);
+      }
+
       const stats = fs.statSync(recordingPath);
       const ipfsData = {
         cid,
         url,
+        storachaCid,
+        storachaUrl,
         dateUploaded: new Date().toISOString()
       };
       

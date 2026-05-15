@@ -10,7 +10,13 @@ import { LoggerService } from './LoggerService';
 
 interface IPFSStatus {
   isNodeRunning: boolean;
+  storachaEnabled: boolean;
   gateway: string;
+}
+
+export interface StorachaUploadResult {
+  cid: string;
+  gatewayUrl: string;
 }
 
 export class IPFSService {
@@ -18,6 +24,7 @@ export class IPFSService {
   private helia: HeliaLibp2p | null = null;
   private fs: UnixFS | null = null;
   private isNodeRunning = false;
+  private storacha: any | null = null;
 
   constructor(logger: LoggerService) {
     this.logger = logger;
@@ -42,6 +49,11 @@ export class IPFSService {
 
       const peerId = this.helia.libp2p.peerId.toString();
       this.logger.info(`Helia node started: ${peerId}`);
+
+      if (ipfsConfig.storacha.enabled) {
+        await this.initStoracha();
+      }
+
       return true;
     } catch (error) {
       this.logger.error('Failed to start Helia node', error);
@@ -50,9 +62,33 @@ export class IPFSService {
     }
   }
 
+  private async initStoracha(): Promise<void> {
+    try {
+      // Subpath imports use modern conditional exports; bypass TS module
+      // resolution complaints by casting through any. Runtime works in
+      // Node 18+ which is what the rest of this project targets.
+      const storachaPkg: any = await import('@storacha/client');
+      const ed25519: any = await import('@storacha/client/principal/ed25519' as string);
+      const Proof: any = await import('@storacha/client/proof' as string);
+
+      const principal = ed25519.Signer.parse(ipfsConfig.storacha.key!);
+      const client = await storachaPkg.create({ principal });
+      const proof = await Proof.parse(ipfsConfig.storacha.proof!);
+      const space = await client.addSpace(proof);
+      await client.setCurrentSpace(space.did());
+
+      this.storacha = client;
+      this.logger.info(`Storacha client ready. Space: ${space.did()}`);
+    } catch (error) {
+      this.logger.error('Failed to init Storacha client; will skip uploads', error);
+      this.storacha = null;
+    }
+  }
+
   public getStatus(): IPFSStatus {
     return {
       isNodeRunning: this.isNodeRunning,
+      storachaEnabled: !!this.storacha,
       gateway: this.isNodeRunning ? ipfsConfig.gatewayUrl : ipfsConfig.publicGateway,
     };
   }
@@ -77,7 +113,9 @@ export class IPFSService {
     const bytes = fs.readFileSync(filePath);
     const cid = await this.fs!.addBytes(bytes);
     const cidStr = cid.toString();
-    this.logger.info(`Added file to IPFS: ${path.basename(filePath)} (${bytes.length} bytes) → ${cidStr}`);
+    this.logger.info(
+      `Added file to IPFS: ${path.basename(filePath)} (${bytes.length} bytes) → ${cidStr}`
+    );
     return cidStr;
   }
 
@@ -86,8 +124,25 @@ export class IPFSService {
     const buf = Buffer.isBuffer(content) ? content : Buffer.from(content);
     const cid = await this.fs!.addBytes(buf);
     const cidStr = cid.toString();
-    this.logger.info(`Added content to IPFS${label ? ` (${label})` : ''}: ${buf.length} bytes → ${cidStr}`);
+    this.logger.info(
+      `Added content to IPFS${label ? ` (${label})` : ''}: ${buf.length} bytes → ${cidStr}`
+    );
     return cidStr;
+  }
+
+  public async uploadToStoracha(filePath: string): Promise<StorachaUploadResult | null> {
+    if (!this.storacha) return null;
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+    const bytes = fs.readFileSync(filePath);
+    const fileName = path.basename(filePath);
+    const file = new File([bytes], fileName, { type: 'video/mp4' });
+    const cid = await this.storacha.uploadFile(file);
+    const cidStr = cid.toString();
+    const gatewayUrl = `${ipfsConfig.storacha.gatewayUrl}/${cidStr}`;
+    this.logger.info(`Uploaded to Storacha: ${fileName} → ${cidStr}`);
+    return { cid: cidStr, gatewayUrl };
   }
 
   public async getContent(cidStr: string): Promise<Buffer> {
@@ -103,7 +158,6 @@ export class IPFSService {
   public async pinContent(cidStr: string): Promise<void> {
     this.assertRunning();
     const cid = CID.parse(cidStr);
-    // Helia keeps blocks until GC runs; explicitly add to the pin set.
     for await (const _ of this.helia!.pins.add(cid)) {
       // drain
     }

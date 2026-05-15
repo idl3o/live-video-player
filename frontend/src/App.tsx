@@ -6,6 +6,7 @@ import { SiweConnect } from './components/SiweConnect';
 import { StreamList } from './components/StreamList';
 import { FlvPlayer } from './components/FlvPlayer';
 import { Chat } from './components/Chat';
+import { RecordingsList } from './components/RecordingsList';
 import { TipButton } from './components/TipButton';
 import { RecentTips } from './components/RecentTips';
 import { PaymentStream } from './components/PaymentStream';
@@ -73,7 +74,10 @@ export default function App() {
       </header>
 
       <main>
-        <StreamList selected={selectedStream?.stream ?? null} onSelect={setSelectedStream} />
+        <div className="sidebar">
+          <StreamList selected={selectedStream?.stream ?? null} onSelect={setSelectedStream} />
+          <RecordingsList />
+        </div>
 
         <section className="viewer">
           {selectedStream ? (
