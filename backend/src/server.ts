@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import path from 'path';
 import fs from 'fs';
 import net from 'net';
@@ -15,6 +16,17 @@ import { authenticate } from './middleware/authMiddleware';
 import { authRoutes } from './routes/authRoutes';
 
 dotenv.config();
+
+// In production, refuse to start with the documented dev-default secrets.
+import { findWeakSecrets } from './lib/checkSecrets';
+const weakSecrets = findWeakSecrets(process.env);
+if (weakSecrets.length > 0) {
+  console.error(
+    `[FATAL] Refusing to start in production with default secrets: ${weakSecrets.join(', ')}. ` +
+      `Set them to strong random values in your environment.`
+  );
+  process.exit(1);
+}
 
 const API_PORT = parseInt(process.env.PORT || '45001', 10);
 const RTMP_PORT = parseInt(process.env.RTMP_PORT || '45935', 10);
@@ -34,6 +46,18 @@ function checkPortInUse(port: number, host = '127.0.0.1'): Promise<boolean> {
 }
 
 const app = express();
+
+// Security headers. crossOriginResourcePolicy is set to cross-origin because
+// the React dev server on :3000 needs to load assets/recordings from :45001,
+// and FLV/HLS players need to fetch media from :45000. CSP is disabled by
+// default because tightening it interferes with the wallet stack on the
+// frontend; tighten when shipping a hosted deploy.
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
 app.use(cors());
 app.use(express.json());
 
@@ -107,10 +131,26 @@ const nmsConfig = {
   logType: 4,
 };
 
-app.use(express.static(path.join(__dirname, '../../')));
+// Static-serve only the landing page + the built frontend (when present).
+// Previously this served the entire repo root which made .env, logs, and
+// any other top-level file web-accessible at http://host:45001/.
+const projectRoot = path.join(__dirname, '../../');
+const frontendDist = path.join(projectRoot, 'frontend', 'dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+}
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../landing-page.html'));
+  const landing = path.join(projectRoot, 'landing-page.html');
+  if (fs.existsSync(landing)) {
+    return res.sendFile(landing);
+  }
+  // Fall through to the built frontend index if the landing page is gone.
+  const indexHtml = path.join(frontendDist, 'index.html');
+  if (fs.existsSync(indexHtml)) {
+    return res.sendFile(indexHtml);
+  }
+  res.status(404).send('Not found');
 });
 
 app.get('/app', (req, res) => {
