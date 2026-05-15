@@ -15,6 +15,10 @@
 FROM node:20-alpine AS frontend
 WORKDIR /app/frontend
 
+# Native toolchain — bufferutil (transitive from socket.io-client and wagmi's
+# wallet stack) wants a node-gyp rebuild on alpine.
+RUN apk add --no-cache python3 make g++ libc6-compat
+
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci --legacy-peer-deps --no-audit --no-fund
 

@@ -107,6 +107,8 @@ The build cache reuses layers as long as `package.json` files don't change.
 - **iOS Safari won't autoplay** — Safari requires a user gesture. Tap the play button on the video element.
 - **OBS gets "connection rejected"** — `STREAM_AUTH_PUBLISH=true` (default) requires `?token=<jwt>` in the RTMP URL. Sign in, copy the JWT, append it.
 - **Recording never gets uploaded to Storacha** — check `docker compose logs backend | grep -i storacha`. Common cause: `STORACHA_PROOF` not base64-encoded; it must be the base64 form from `storacha delegation create --base64`.
+- **`docker build` fails with `mount callback failed ... input/output error` during image export** — the host machine is low on disk space; Docker Desktop's VM can't write its build cache. Free space on the host (`df -h`), then `docker system prune -a -f` once the daemon is responsive again. The image build itself takes ~3-5GB of layer space.
+- **`docker build` fails with `gyp ERR! find Python`** — fixed in current Dockerfile (both frontend and backend stages install `python3 make g++` in alpine). If you see this on an older checkout, pull the latest.
 
 ## What's not in this deploy
 
