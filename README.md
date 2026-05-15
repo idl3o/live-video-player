@@ -1,157 +1,83 @@
 # Live Video Player
 
-<div align="center">
-  <img src="frontend/public/logo192.png" alt="Live Video Player Logo" width="120">
-  <h3>A Decentralized Open-Source Streaming Solution</h3>
-  <p>Own your content. Stream freely. Build community.</p>
-</div>
+A self-hostable live streaming platform with on-chain identity and payments.
 
-<div align="center">
-  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Stars](https://img.shields.io/github/stars/idl3o/live-video-player?style=social)](https://github.com/idl3o/live-video-player/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/idl3o/live-video-player?style=social)](https://github.com/idl3o/live-video-player/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/idl3o/live-video-player)](https://github.com/idl3o/live-video-player/issues)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
+## What it is
 
-</div>
+Stream from OBS, watch on any device (including iPhone), pay creators with crypto, and have every recording archived to Filecoin and anchored to its creator on-chain. The whole stack runs from a single Docker compose file behind Caddy with automatic TLS.
 
-## 🌐 Decentralized Live Streaming for Everyone
+The streaming pipeline is conventional: RTMP ingest via [Node-Media-Server](https://github.com/illuspas/Node-Media-Server) → HLS (default, iOS-compatible) and HTTP-FLV (low-latency fallback). The Web3 layer is opt-in per feature, so you can run a vanilla streaming server without any wallet integration if you want.
 
-Live Video Player is a fully open-source, self-hosted streaming platform that empowers content creators, communities, and organizations to control their own media ecosystem. Unlike centralized streaming platforms that control your content, dictate terms, and monetize your audience, Live Video Player puts the power back in your hands.
+## Features
 
-### 🔄 Why Decentralization Matters
+All of the on-chain features run on **Base Sepolia testnet** out of the box. Each is independently env-gated and the UI hides anything unconfigured.
 
-In a world where content creators are increasingly at the mercy of platform algorithms and moderation policies, decentralization offers:
+| Feature | What it does | Required env |
+|---|---|---|
+| Live streaming | OBS → RTMP → HLS/FLV. iPhone Safari plays HLS natively; desktop can opt into FLV for ~2s lower latency. | none |
+| Wallet sign-in (SIWE) | Sign-In With Ethereum replaces username/password. The wallet *is* the user identity. | `VITE_WALLETCONNECT_PROJECT_ID` |
+| USDC tipping | One-shot Circle USDC transfers on Base Sepolia with $0.10 / $1 / $5 presets. Recent tips read from on-chain Transfer events. | wallet only |
+| Per-second payment streams | Superfluid Constant Flow Agreements. Pay $1/hr while watching; flow stops on toggle/tab-close. | `VITE_PAYMENT_SUPER_TOKEN` |
+| Filecoin-pinned recordings | Every finished mp4 is mirrored to Storacha after the local Helia pin. Survives home-node downtime. | `STORACHA_KEY`, `STORACHA_PROOF` |
+| Clip praise + endorsements | EAS attestations on Base Sepolia surface community signal as ★/✦ badges. | `VITE_EAS_CLIP_PRAISE_SCHEMA`, `VITE_EAS_STREAMER_ENDORSEMENT_SCHEMA` |
+| On-chain content registry | `LiveStreamContent.sol` anchors each recording's CID to its creator. First writer wins. | `VITE_LIVE_STREAM_CONTRACT` |
+| Forge-proof chat | Chat identity is verified from the same JWT issued by SIWE. Anonymous viewers get an `anon-<6hex>` identity with no privileged roles. | wallet for authed chat |
+| Cross-platform live recording | Node-Media-Server's `trans.tasks` produces both HLS segments and final mp4s. | none |
 
-- **Content Freedom**: No algorithmic suppression or unpredictable moderation
-- **Revenue Control**: Keep 100% of your earnings without platform commissions
-- **Data Ownership**: Your community's data stays with you, not on corporate servers
-- **Resilience**: No single point of failure that can take down all streams
-- **Customization**: Tailor the platform to your specific needs and branding
-- **True Ownership**: Blockchain integration ensures your content remains yours (coming soon)
+See [.env.example](.env.example) for the full list with provisioning commands.
 
-## ✨ Features
+## Run it
 
-- **OBS Integration**: Stream directly from OBS Studio to your own server
-- **Low-Latency Streaming**: Optimized for real-time interaction using RTMP and HTTP-FLV
-- **Audio Visualization**: See live audio levels with responsive visualizer
-- **Volume Controls**: Fine-tuned audio controls for viewers
-- **Responsive UI**: Modern interface that works across devices
-- **Stream Discovery**: Browse active streams on your network
-- **Screen Sharing**: Share your screen directly within the platform
-- **Federation-Ready**: Architecture designed to connect with other instances (coming soon)
-- **Blockchain Integration**: Support for content verification and tokenized contributions (coming soon)
-
-## 🧩 Technology Stack
-
-This project embraces open-source technologies throughout:
-
-- **Backend**: Node.js server with Express and Node-Media-Server (FOSS RTMP server)
-- **Frontend**: React application with TypeScript for a responsive viewer
-- **Streaming**: Native RTMP protocol with HTTP-FLV for playback
-- **Packaging**: Docker support for easy deployment anywhere (coming soon)
-- **Blockchain**: Decentralized content verification and monetization layer (in development)
-
-## 🚀 Quick Start
-
-### Self-Host in Minutes
+### Local dev (macOS / Linux / Windows + WSL2)
 
 ```bash
-# Clone the repository
-git clone https://github.com/idl3o/live-video-player.git
-cd live-video-player
-
-# Start all services (backend + frontend)
-npm start
+npm run install:all
+npm run dev
 ```
 
-Open your browser to `http://localhost:3000` and you're ready to go!
+Open http://localhost:3000. Backend API on 45001, RTMP on 45935, HLS/FLV on 45000.
 
-See the [Installation Guide](docs/installation.md) for detailed setup instructions and customization options.
+OBS settings:
+- Server: `rtmp://localhost:45935/live`
+- Stream Key: `<your stream key>?token=<your JWT>` (key visible in the user bar after sign-in)
 
-## 🔨 Build Your Own Network
+### Production deploy
 
-### Stream Without Limits
+```bash
+cp .env.example .env
+# edit .env: set DOMAIN, JWT_SECRET, STREAM_SECRET at minimum
+docker compose up -d --build
+```
 
-Live Video Player is designed to be:
+See [docs/deploy.md](docs/deploy.md) for the full deploy walkthrough — domain pointing, TLS, OBS config, backups.
 
-1. **Self-Hosted**: Install on your own server, VPS, or even a home computer
-2. **Network-Capable**: Connect multiple instances to form content networks (coming soon)
-3. **Extendable**: Add plugins and extend functionality with your own code
-4. **Community-Driven**: Built by streamers, for streamers
+### Windows-native (no Docker)
 
-### Deployment Options
+PowerShell launchers remain for Windows users who want native dev:
+```powershell
+npm run start:win
+```
 
-- **Single-Server**: Perfect for personal streaming or small communities
-- **Multi-Node**: Distribute load across multiple servers for larger audiences (coming soon)
-- **Edge Network**: Deploy close to your viewers for optimal performance (coming soon)
-- **P2P Enhancement**: Hybrid delivery to reduce server bandwidth costs (on roadmap)
+## Architecture
 
-## 🛠️ For Developers
+Three workspaces in one repo:
 
-### Architecture
+- [backend/](backend/) — TypeScript Express + Node-Media-Server + Socket.io chat + Helia IPFS + Storacha + JWT. 24 Vitest tests covering auth, recording lifecycle, middleware, and chat identity.
+- [frontend/](frontend/) — Vite + React + TypeScript. wagmi v2 + viem + RainbowKit for wallets. flv.js + hls.js for playback.
+- [blockchain/](blockchain/) — Hardhat project (Solidity 0.8.20, ethers v6). [LiveStreamContent.sol](blockchain/contracts/LiveStreamContent.sol) is the on-chain registry. 5 contract tests.
 
-The project consists of two main components:
+Reverse proxy + TLS via [Caddy](Caddyfile). CI on every push runs typecheck + tests against both backend and frontend ([.github/workflows/ci.yml](.github/workflows/ci.yml)).
 
-1. **Backend**: RTMP ingestion server and API for stream management
-2. **Frontend**: Viewer interface with real-time playback capabilities
+Deep dive: [CLAUDE.md](CLAUDE.md).
 
-### Extend and Customize
+## Status
 
-- Add custom themes
-- Build plugins
-- Implement monetization
-- Create your own interface
+The May 2026 sprint shipped 12 PRs taking this from "compiles and streams" to a deployable platform with the full Web3 stack wired in. The honest gaps that remain (no DB beyond wallet-derived identity, no frontend tests, recording lifecycle still polling) are tracked in [ROADMAP.md](ROADMAP.md) and [docs/journal/](docs/journal/).
 
-See our [Developer Guide](docs/developers.md) to start contributing.
+## License
 
-### Blockchain Integration (Coming Soon)
+MIT — see [LICENSE](LICENSE).
 
-Our roadmap includes integration with blockchain technologies to enable:
+## Acknowledgments
 
-- **Content Verification**: Cryptographic proofs of content authenticity
-- **Creator Tokens**: Issue creator-specific tokens for your community
-- **Microtransactions**: Direct support from viewers without intermediaries
-- **Smart Contracts**: Programmable interactions between creators and viewers
-- **Decentralized Storage**: Optional IPFS-based content archiving
-
-## 🤝 Join the Movement
-
-### The Future is Open
-
-We believe that open-source, decentralized solutions are the future of content creation and distribution. Join us in building that future:
-
-- **[Star this Repository](https://github.com/idl3o/live-video-player)**: Show your support
-- **[Fork the Project](https://github.com/idl3o/live-video-player/fork)**: Create your own version
-- **[Report Issues](https://github.com/idl3o/live-video-player/issues)**: Help us improve
-- **[Contribute Code](https://github.com/idl3o/live-video-player/pulls)**: Add features and fix bugs
-
-### Support the Project
-
-If you find this project useful, please consider:
-
-- Contributing code or documentation
-- Reporting bugs and suggesting features
-- Sharing with your network
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. This means you can use, modify, and distribute it freely, even for commercial purposes.
-
-## 💡 Inspiration and Thanks
-
-This project stands on the shoulders of giants in the open-source community:
-
-- [Node-Media-Server](https://github.com/illuspas/Node-Media-Server) for the RTMP engine
-- [flv.js](https://github.com/bilibili/flv.js) for the Flash Video playback
-- [React](https://reactjs.org/) for the frontend framework
-- [Express](https://expressjs.com/) for the API layer
-- All [contributors and supporters](CONTRIBUTORS.md) who help make this project better
-
----
-
-<div align="center">
-  <p><strong>Live Video Player</strong> • Free Your Content • Own Your Platform</p>
-  <p>Made with ❤️ by the open-source community</p>
-</div>
+Built on [Node-Media-Server](https://github.com/illuspas/Node-Media-Server), [Helia](https://github.com/ipfs/helia), [Storacha](https://storacha.network/), [Superfluid](https://www.superfluid.finance/), [EAS](https://attest.org/), [RainbowKit](https://www.rainbowkit.com/), [viem](https://viem.sh/), [flv.js](https://github.com/bilibili/flv.js), and [hls.js](https://github.com/video-dev/hls.js).
