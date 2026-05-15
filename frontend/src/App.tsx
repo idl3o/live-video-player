@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { api, getToken, MeResponse, setToken } from './api/client';
+import type { Address } from 'viem';
+import { api, getToken, MeResponse, setToken, Stream } from './api/client';
 import { SiweConnect } from './components/SiweConnect';
 import { StreamList } from './components/StreamList';
 import { FlvPlayer } from './components/FlvPlayer';
 import { Chat } from './components/Chat';
+import { TipButton } from './components/TipButton';
+import { RecentTips } from './components/RecentTips';
 
 export default function App() {
   const [user, setUser] = useState<MeResponse | null>(null);
   const [authReady, setAuthReady] = useState(false);
-  const [selectedStream, setSelectedStream] = useState<string | null>(null);
+  const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
 
   const loadMe = async () => {
     if (!getToken()) {
@@ -49,6 +52,8 @@ export default function App() {
     );
   }
 
+  const streamerAddress = selectedStream?.streamerAddress as Address | undefined;
+
   return (
     <div className="app-shell">
       <header>
@@ -67,13 +72,30 @@ export default function App() {
       </header>
 
       <main>
-        <StreamList selected={selectedStream} onSelect={setSelectedStream} />
+        <StreamList selected={selectedStream?.stream ?? null} onSelect={setSelectedStream} />
 
         <section className="viewer">
           {selectedStream ? (
             <>
-              <FlvPlayer streamKey={selectedStream} />
-              <Chat streamKey={selectedStream} username={user.username} />
+              <div className="viewer-main">
+                <FlvPlayer streamKey={selectedStream.stream} />
+                <div className="viewer-meta">
+                  <div className="viewer-title">
+                    {selectedStream.streamerUsername || selectedStream.stream}
+                  </div>
+                  {streamerAddress ? (
+                    <>
+                      <TipButton streamerAddress={streamerAddress} />
+                      <RecentTips streamerAddress={streamerAddress} />
+                    </>
+                  ) : (
+                    <div className="muted small">
+                      This streamer hasn't connected a wallet — tipping unavailable.
+                    </div>
+                  )}
+                </div>
+              </div>
+              <Chat streamKey={selectedStream.stream} username={user.username} />
             </>
           ) : (
             <div className="placeholder">Select a stream to start watching.</div>

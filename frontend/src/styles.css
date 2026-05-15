@@ -118,11 +118,92 @@ main {
   color: var(--fg-dim);
 }
 
+.viewer-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.viewer-meta {
+  padding: 12px 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  border-top: 1px solid var(--border);
+  background: var(--bg-elev);
+  overflow-x: auto;
+}
+
+.viewer-title {
+  font-size: 16px;
+  font-weight: 600;
+  align-self: center;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
 .player-video {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   background: black;
 }
+
+.tip-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-width: 240px;
+}
+
+.tip-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.tip-target { font-family: ui-monospace, monospace; }
+.tip-presets { display: flex; gap: 6px; }
+.tip-presets .preset {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 13px;
+}
+.tip-presets .preset.active { border-color: var(--accent); background: var(--bg-elev); }
+.tip-amount {
+  flex: 1;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  width: 80px;
+}
+.tip-send { padding: 8px 12px; font-size: 14px; }
+.tip-link { color: var(--accent); text-decoration: none; font-size: 12px; }
+.tip-link:hover { text-decoration: underline; }
+.tip-error { word-break: break-word; }
+
+.recent-tips {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-width: 240px;
+  max-width: 320px;
+}
+.recent-tips-header { font-size: 12px; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.recent-tips ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.recent-tips li { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.tip-from { font-family: ui-monospace, monospace; font-size: 12px; color: var(--fg-dim); }
+.tip-value { font-weight: 600; margin-left: auto; }
+.muted { color: var(--fg-dim); }
+.small { font-size: 12px; }
 
 .chat {
   display: flex;

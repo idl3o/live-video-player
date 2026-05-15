@@ -3,7 +3,7 @@ import { api, Stream } from '../api/client';
 
 interface Props {
   selected: string | null;
-  onSelect: (streamKey: string | null) => void;
+  onSelect: (stream: Stream | null) => void;
 }
 
 export function StreamList({ selected, onSelect }: Props) {
@@ -41,9 +41,9 @@ export function StreamList({ selected, onSelect }: Props) {
           <li key={s.id}>
             <button
               className={selected === s.stream ? 'active' : ''}
-              onClick={() => onSelect(s.stream)}
+              onClick={() => onSelect(s)}
             >
-              {s.stream}
+              <span>{s.streamerUsername || s.stream}</span>
               <span className="viewer-count">{s.subscribers} viewers</span>
             </button>
           </li>

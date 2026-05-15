@@ -246,10 +246,14 @@ app.get('/api/streams', (req, res) => {
   const activeStreams = nms.getStreams();
   const streamData = Object.entries(activeStreams).map(([key, value]: [string, any]) => {
     const parts = key.split('/');
+    const streamKey = parts[2];
+    const streamer = streamKey ? authService.getUserByStreamKey(streamKey) : undefined;
     return {
       id: key,
       app: parts[1],
-      stream: parts[2],
+      stream: streamKey,
+      streamerAddress: streamer?.walletAddress,
+      streamerUsername: streamer?.username,
       publisher: value.publisher
         ? {
             type: value.publisher.type,
@@ -263,6 +267,21 @@ app.get('/api/streams', (req, res) => {
     };
   });
   res.json({ success: true, streams: streamData });
+});
+
+app.get('/api/users/:address/profile', (req, res) => {
+  const addr = req.params.address.toLowerCase();
+  if (!/^0x[a-f0-9]{40}$/.test(addr)) {
+    return res.status(400).json({ error: 'Invalid address' });
+  }
+  const user = authService.findByAddress(addr);
+  if (!user) return res.status(404).json({ error: 'Profile not found' });
+  res.json({
+    walletAddress: user.walletAddress,
+    username: user.username,
+    role: user.role,
+    allowedToStream: user.allowedToStream,
+  });
 });
 
 app.get('/api/recordings', authenticate, (req, res) => {

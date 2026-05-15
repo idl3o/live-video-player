@@ -30,6 +30,8 @@ export interface Stream {
   app: string;
   stream: string;
   subscribers: number;
+  streamerAddress?: string;
+  streamerUsername?: string;
   publisher: null | {
     type: string;
     clientId: string;
