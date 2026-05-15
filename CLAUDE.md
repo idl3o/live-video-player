@@ -45,6 +45,12 @@ npx hardhat ignition deploy ./ignition/modules/Lock.ts
 ### Windows launchers
 `npm run start:win` and `npm run test:env:win` shell out to `start-servers.ps1` / `start-test-env.ps1`. Use these only on Windows — they handle port-killing, firewall rules, and lockfile management. On macOS/Linux use `npm run dev` instead.
 
+### Production deploy ([docs/deploy.md](docs/deploy.md))
+```bash
+docker compose up -d --build
+```
+Multi-stage [Dockerfile](Dockerfile) builds frontend + backend into a single image that ships its own ffmpeg via `ffmpeg-static`. [Caddyfile](Caddyfile) terminates TLS via Let's Encrypt and splits routes between the API (45001) and the NMS HTTP server (45000) for HLS. RTMP (45935) is exposed directly because Node-Media-Server doesn't speak RTMPS.
+
 ## Architecture notes (the parts that span files)
 
 **Three servers in one process.** [backend/src/server.ts](backend/src/server.ts) starts:

@@ -1,0 +1,63 @@
+# docker compose up -d
+#
+# Brings up:
+#   backend  — Live Video Player API + RTMP/HLS via Node-Media-Server
+#   caddy    — TLS termination + reverse proxy. Routes HTTP(S) to backend.
+#
+# RTMP (1935 publishing inside docker-compose, 45935 default outside) is
+# exposed directly because RTMPS isn't supported by Node-Media-Server.
+# Publishers authenticate via ?token=<jwt> in the RTMP URL.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Pass through any VITE_* values you want baked into the frontend bundle.
+        # Override at build time: docker compose build --build-arg VITE_WALLETCONNECT_PROJECT_ID=...
+        VITE_WALLETCONNECT_PROJECT_ID: ${VITE_WALLETCONNECT_PROJECT_ID:-}
+        VITE_PAYMENT_SUPER_TOKEN: ${VITE_PAYMENT_SUPER_TOKEN:-}
+        VITE_EAS_STREAMER_ENDORSEMENT_SCHEMA: ${VITE_EAS_STREAMER_ENDORSEMENT_SCHEMA:-}
+        VITE_EAS_CLIP_PRAISE_SCHEMA: ${VITE_EAS_CLIP_PRAISE_SCHEMA:-}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+    ports:
+      # RTMP needs to be reachable directly by OBS — no Caddy in front because
+      # node-media-server doesn't speak RTMPS.
+      - "${RTMP_PORT:-45935}:45935"
+    volumes:
+      - media:/app/media
+      - ipfs-repo:/app/ipfs-repo
+    networks:
+      - lvp
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    networks:
+      - lvp
+
+volumes:
+  media:
+  ipfs-repo:
+  caddy_data:
+  caddy_config:
+
+networks:
+  lvp:
+    driver: bridge

@@ -1,0 +1,35 @@
+# Caddy v2 config — terminates TLS and routes between the two backend ports.
+#
+# Set DOMAIN in .env. For local testing leave it as `localhost` and Caddy will
+# issue an internal cert (browser will warn — accept it for dev).
+#
+# For production, set DOMAIN to a real hostname pointed at this host and Caddy
+# will auto-issue a Let's Encrypt cert.
+
+{
+    # Email used for Let's Encrypt ACME registration (optional; omit for staging).
+    # email you@example.com
+}
+
+{$DOMAIN:localhost} {
+    encode zstd gzip
+
+    # HLS playlists + segments are served by Node-Media-Server's HTTP server
+    # on port 45000. Send /live/* there. This path must come before the API
+    # catch-all because it's a more specific match.
+    handle /live/* {
+        reverse_proxy backend:45000
+    }
+
+    # Socket.io websocket upgrade for chat.
+    handle /socket.io/* {
+        reverse_proxy backend:45001
+    }
+
+    # Everything else (REST API, recordings static, frontend assets, index) →
+    # backend Express on 45001. The backend serves the built frontend out of
+    # /frontend/dist when present.
+    handle {
+        reverse_proxy backend:45001
+    }
+}

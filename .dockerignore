@@ -1,0 +1,39 @@
+**/node_modules
+**/dist
+**/build
+**/.git
+**/.github
+**/coverage
+**/*.log
+**/*.tsbuildinfo
+
+# Local environment / secrets
+.env
+.env.local
+**/.env.*.local
+
+# Editor / OS
+.idea
+.vscode
+.DS_Store
+
+# Test + dev tooling
+**/vitest.config.ts
+**/*.test.ts
+**/__tests__
+
+# Existing build artifacts that would shadow our build outputs
+backend/dist
+frontend/dist
+backend/media
+backend/ipfs-repo
+ipfs-repo
+media
+
+# Windows-only launchers (not relevant to the docker deploy)
+*.ps1
+*.cmd
+*.bak
+
+# Large recoverable files
+deploy/
